@@ -385,7 +385,7 @@ return (
           Weather in {city}:{" "}
           <span className="weather-condition">{weatherDescription}</span>
         </h2>
-        <h3>Recommended Foods:</h3>
+        <h3 style={{color:"red"}}>Recommended Foods:</h3>
 
         <div className="food-grid">
           {getFoodItems().map((food, index) => (
