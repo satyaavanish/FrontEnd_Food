@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { dishObserver } from './Observer'; 
+import { dishObserver } from './Observer'; // or correct relative path
 import './App.css';
 import Main from "./Main";
 import { useNavigate } from "react-router-dom";
@@ -53,7 +53,7 @@ const summaryRef = useRef(null);
 
       if (dishName) {
         try {
-          const res = await axios.get("https://food-backend-xi-smoky.vercel.app/api/places", {
+          const res = await axios.get("http://localhost:5000/api/places", {
             params: {
               lat: latitude,
               lng: longitude,
@@ -101,7 +101,7 @@ const summaryRef = useRef(null);
       setLocationError("");
       setError("");
 
-      const backendRes = await axios.get("https://food-backend-xi-smoky.vercel.app/api/places", {
+      const backendRes = await axios.get("http://localhost:5000/api/places", {
         params: {
           lat,
           lng,
@@ -266,7 +266,7 @@ Respond in the following JSON format ONLY:
 
         const mainItem = dish.toLowerCase().replace(/[^\w\s]/g, "");
 
-        const nutritionRes = await axios.post("https://food-backend-xi-smoky.vercel.app/detect", {
+        const nutritionRes = await axios.post("http://localhost:5000/detect", {
           items: [mainItem],
           displayNames: [dish],
         });
@@ -274,7 +274,7 @@ Respond in the following JSON format ONLY:
         setNutrition(nutritionRes.data);
       } catch (err) {
         console.error("Error:", err);
-        setError("Something went wrong. Check console");
+        setError("Something went wrong. Check console or API key.");
       } finally {
         setLoading(false);
       }
@@ -365,7 +365,8 @@ Respond in the following JSON format ONLY:
         </button>
       </div>
     </div>
- 
+
+    {/* Outside the white-box */}
     <div className="outside-buttons">
       <button onClick={getUserLocation} className="location-info" style={{height:"50px"}}>
         📍 Get My Location & Nearby Restaurants

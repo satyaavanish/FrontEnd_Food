@@ -72,7 +72,7 @@ const summaryRef = useRef(null);
   const searchNearbyRestaurants = async (lat, lng, keyword) => {
     setRestaurantsLoading(true);
     try {
-      const res = await axios.get("https://food-backend-xi-smoky.vercel.app/api/places", {
+      const res = await axios.get("http://localhost:5000/api/places", {
         params: {
           lat: lat,
           lng: lng,
@@ -108,7 +108,7 @@ const summaryRef = useRef(null);
       const geoRes = await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
         params: {
           address: city,
-            key: process.env.REACT_APP_PLACES_KEY
+          key:  GEMINI_API_KEY
         }
       });
 
