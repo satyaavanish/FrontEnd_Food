@@ -117,7 +117,7 @@ function Chatbot() {
               whiteSpace: 'pre-line',color: '#333'
             }}
           >
-            <strong>{msg.sender === 'user' ? 'You' : 'Foodie Friend'}:</strong>
+             <strong><bold><i>{msg.sender === 'user' ? 'You' : 'Foodie Friend'}:</i></bold></strong>
             <div>
               {msg.text.split('\n').map((line, idx) => (
                 <div key={idx}>{line}</div>
