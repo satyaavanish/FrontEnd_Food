@@ -207,7 +207,6 @@ button:focus:not(:active)::after {
   width: auto;
   max-width: 300px;
   height: auto;
-  min-height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
