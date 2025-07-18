@@ -53,7 +53,7 @@ const summaryRef = useRef(null);
 
       if (dishName) {
         try {
-          const res = await axios.get("http://localhost:5000/api/places", {
+          const res = await axios.get("https://backend-food-i0h7.onrender.com/api/places", {
             params: {
               lat: latitude,
               lng: longitude,
@@ -101,7 +101,7 @@ const summaryRef = useRef(null);
       setLocationError("");
       setError("");
 
-      const backendRes = await axios.get("http://localhost:5000/api/places", {
+      const backendRes = await axios.get("https://backend-food-i0h7.onrender.com/api/places", {
         params: {
           lat,
           lng,
@@ -266,7 +266,7 @@ Respond in the following JSON format ONLY:
 
         const mainItem = dish.toLowerCase().replace(/[^\w\s]/g, "");
 
-        const nutritionRes = await axios.post("http://localhost:5000/detect", {
+        const nutritionRes = await axios.post("https://backend-food-i0h7.onrender.com/detect", {
           items: [mainItem],
           displayNames: [dish],
         });
