@@ -330,7 +330,7 @@ Respond in the following JSON format ONLY:
           <h3>🍎 Nutrition Information (per 100g):</h3>
           {Object.entries(nutrition).map(([item, data]) => (
             <div key={item}>
-              <strong>{item}<br /><br /></strong>
+              <strong style={{color:"black"}}>{item}<br /><br /></strong>
               {typeof data === "object" ? (
                 <ul>
                   <li><strong>Calories:</strong> {data.calories ?? "N/A"}</li>
