@@ -186,7 +186,7 @@ function App() {
     
     try {
       const response = await axios.post(
-        https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY},
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`,
         {
           contents: [{
             parts: [{
@@ -224,7 +224,7 @@ setSummaryText(cleanedSummary);
       if (err.response?.data?.error?.message) {
         errorMessage += : ${err.response.data.error.message};
       }
-      setSummaryText(${errorMessage}. Please try again later.);
+      setSummaryText(`${errorMessage}. Please try again later.`);
     } finally {
   setIsSummarizing(false);
   setTimeout(() => {
@@ -455,7 +455,7 @@ Respond in the following JSON format ONLY:
       >
        {isSummarizing
   ? "Generating..."
-  : 📖 Info About Dish ${dishName || ""}}
+  : `📖 Info About Dish ${dishName || ""}`}
 
       </button>
     </div>
@@ -472,7 +472,7 @@ Respond in the following JSON format ONLY:
               <strong>{place.name}</strong> — {place.vicinity}. 
               <strong> Rating⭐ - {place.rating}</strong>
               <a
-                href={https://www.google.com/maps/place/?q=place_id:${place.place_id}}
+                href={`https://www.google.com/maps/place/?q=place_id:${place.place_id}`}
                 target="_blank"
                 rel="noreferrer"
                 className="map-link"
