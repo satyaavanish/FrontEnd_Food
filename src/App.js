@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import axios from "axios";
 import { dishObserver } from './Observer'; // or correct relative path
 import './App.css';
 import Main from "./Main";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
-
+import CityAutoComplete from "./CityAutoComplete";
 function App() {
    const navigate = useNavigate();
   const nutritionCache = new Map();
@@ -26,6 +26,10 @@ function App() {
   const GEMINI_API_KEY = process.env.REACT_APP_PLACES_KEY; 
   const [detectedFood, setDetectedFood] = useState("");
 const summaryRef = useRef(null);
+   const [cityInput, setCityInput] = useState("");
+  const [citySuggestions, setCitySuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const suggestionsRef = useRef(null);
 
   const scrollToRestaurants = () => {
     setTimeout(() => {
@@ -35,7 +39,21 @@ const summaryRef = useRef(null);
       });
     }, 100);
   };
-
+useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+   const handleCitySelect = (city) => {
+    console.log("Selected city:", city.name, city.country);
+    
+  };
   const getUserLocation = async () => {
     if (!navigator.geolocation) {
       setLocationError("Geolocation is not supported by your browser.");
@@ -349,23 +367,24 @@ Respond in the following JSON format ONLY:
         </div>
       )}
 
-      <div className="manual-location-group">
-        <input
-          type="text"
-          placeholder="Enter location (e.g., Delhi)"
-          value={manualLocation}
-          onChange={(e) => setManualLocation(e.target.value)}
-          className="manual-input"
-          onKeyDown={e => {
-            if (e.key === 'Enter' && !loading) handleManualLocationSearch();
-          }}
-        />
-        <button onClick={handleManualLocationSearch}  className="manual-button">
-          🔍 Search Restaurants
-        </button>
-      </div>
-    </div>
-
+      <div className="manual-location-group" ref={suggestionsRef}>
+  <CityAutoComplete 
+    onSelect={(city) => {
+      handleCitySelect(city);
+      // Set the manual location for display
+      setManualLocation(`${city.name}, ${city.region}, ${city.country}`);
+    }}
+    // Remove countryCode to show all countries or specify like "US"
+  />
+  
+  <button 
+    onClick={handleManualLocationSearch} 
+    className="manual-button"
+    disabled={!manualLocation}
+  >
+    🔍 Search Restaurants
+  </button>
+</div>
     {/* Outside the white-box */}
     <div className="outside-buttons">
       <button onClick={getUserLocation} className="location-info" style={{height:"50px"}}>
