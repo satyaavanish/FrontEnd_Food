@@ -404,42 +404,18 @@ Respond in the following JSON format ONLY:
       )}
 
       
-        <div className="manual-location-group" ref={suggestionsRef}>
-        <div className="city-input-container">
-          <input
-            type="text"
-            value={manualLocation}
-            onChange={handleManualLocationChange}
-            placeholder="Enter city name"
-            className="city-input"
-          />
-          {showSuggestions && citySuggestions.length > 0 && (
-            <ul className="suggestions-list">
-              {citySuggestions.map((suggestion, index) => (
-                <li 
-                  key={index}
-                  onClick={() => selectSuggestion(suggestion)}
-                  className="suggestion-item"
-                >
-                  {suggestion}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-        
-        <CityAutoComplete 
-          onSelect={handleCitySelect}
-        />
-        
-        <button 
-          onClick={handleManualLocationSearch} 
-          className="manual-button"
-          disabled={!manualLocation}
-        >
-          🔍 Search Restaurants
-        </button>
-      </div>
+        <div className="manual-location-group">
+  <CityAutoComplete onSelect={handleCitySelect} />
+
+  <button 
+    onClick={handleManualLocationSearch} 
+    className="manual-button"
+    disabled={!manualLocation}
+  >
+    🔍 Search Restaurants
+  </button>
+</div>
+
     </div>
 
     {/* Outside the white-box */}
