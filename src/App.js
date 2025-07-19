@@ -5,7 +5,7 @@ import './App.css';
 import Main from "./Main";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
-import CityAutoComplete from "./CityAutoComplete";
+
 function App() {
    const navigate = useNavigate();
   const nutritionCache = new Map();
@@ -26,41 +26,8 @@ function App() {
   const GEMINI_API_KEY = process.env.REACT_APP_PLACES_KEY; 
   const [detectedFood, setDetectedFood] = useState("");
 const summaryRef = useRef(null);
-   const [cityInput, setCityInput] = useState("");
-  const [citySuggestions, setCitySuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const suggestionsRef = useRef(null);
-const fetchCitySuggestions = async (input) => {
-    if (input.length < 2) {
-      setCitySuggestions([]);
-      return;
-    }
+   
 
-    try {
-      const response = await axios.get(
-        `https://api.teleport.org/api/cities/?search=${input}&limit=5`
-      );
-      const suggestions = response.data._embedded["city:search-results"]
-        .map(item => item.matching_full_name)
-        .filter(name => name);
-      setCitySuggestions(suggestions);
-      setShowSuggestions(true);
-    } catch (error) {
-      console.error("Error fetching city suggestions:", error);
-      setCitySuggestions([]);
-    }
-  };
-    const handleManualLocationChange = (e) => {
-    const value = e.target.value;
-    setManualLocation(value);
-    fetchCitySuggestions(value);
-  };
-   const selectSuggestion = (suggestion) => {
-    setManualLocation(suggestion);
-    setShowSuggestions(false);
-    // Optionally trigger search automatically
-    // handleManualLocationSearch();
-  };
   const scrollToRestaurants = () => {
     setTimeout(() => {
       restaurantResultsRef.current?.scrollIntoView({ 
@@ -180,7 +147,7 @@ useEffect(() => {
     
     try {
       const response = await axios.post(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`,
+        https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY},
         {
           contents: [{
             parts: [{
@@ -209,16 +176,16 @@ useEffect(() => {
       }
 
       const rawSummary = response.data.candidates[0].content.parts[0].text;
-const cleanedSummary = rawSummary.replace(/\*\*/g, '');
+const cleanedSummary = rawSummary.replace(/\\/g, '');
 setSummaryText(cleanedSummary);
  
     } catch (err) {
       console.error("API Error:", err);
       let errorMessage = "Failed to generate summary";
       if (err.response?.data?.error?.message) {
-        errorMessage += `: ${err.response.data.error.message}`;
+        errorMessage += : ${err.response.data.error.message};
       }
-      setSummaryText(`${errorMessage}. Please try again later.`);
+      setSummaryText(${errorMessage}. Please try again later.);
     } finally {
   setIsSummarizing(false);
   setTimeout(() => {
@@ -279,7 +246,7 @@ Respond in the following JSON format ONLY:
 
       try {
         const geminiRes = await axios.post(
-          `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+          https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY},
           payload,
           {
             headers: {
@@ -291,7 +258,7 @@ Respond in the following JSON format ONLY:
         const rawText = geminiRes.data.candidates?.[0]?.content?.parts?.[0]?.text || "";
         let parsed = {};
         try {
-          const cleanText = rawText.replace(/```json|```/g, "").trim();
+          const cleanText = rawText.replace(/json|/g, "").trim();
           const match = cleanText.match(/{[\s\S]*}/);
           if (match) {
             parsed = JSON.parse(match[0]);
@@ -397,24 +364,23 @@ Respond in the following JSON format ONLY:
         </div>
       )}
 
-      <div className="manual-location-group" ref={suggestionsRef}>
-  <CityAutoComplete 
-    onSelect={(city) => {
-      handleCitySelect(city);
-      // Set the manual location for display
-      setManualLocation(`${city.name}, ${city.region}, ${city.country}`);
-    }}
-    // Remove countryCode to show all countries or specify like "US"
-  />
-  
-  <button 
-    onClick={handleManualLocationSearch} 
-    className="manual-button"
-    disabled={!manualLocation}
-  >
-    🔍 Search Restaurants
-  </button>
-</div>
+      <div className="manual-location-group">
+        <input
+          type="text"
+          placeholder="Enter location (e.g., Delhi)"
+          value={manualLocation}
+          onChange={(e) => setManualLocation(e.target.value)}
+          className="manual-input"
+          onKeyDown={e => {
+            if (e.key === 'Enter' && !loading) handleManualLocationSearch();
+          }}
+        />
+        <button onClick={handleManualLocationSearch}  className="manual-button">
+          🔍 Search Restaurants
+        </button>
+      </div>
+    </div>
+
     {/* Outside the white-box */}
     <div className="outside-buttons">
       <button onClick={getUserLocation} className="location-info" style={{height:"50px"}}>
@@ -428,7 +394,7 @@ Respond in the following JSON format ONLY:
       >
        {isSummarizing
   ? "Generating..."
-  : `📖 Info About Dish ${dishName || ""}`}
+  : 📖 Info About Dish ${dishName || ""}}
 
       </button>
     </div>
@@ -438,14 +404,14 @@ Respond in the following JSON format ONLY:
 
     {restaurants.length > 0 && (
       <div className="restaurant-list" ref={restaurantResultsRef}>
-        <h3 style={{ color: "red",marginBottom:"20px" }}>🍽️ Nearby Restaurants Offering "{dishName}":</h3>
+        <h3 style={{ color: "red",marginBottom:"20px" }}>🍽 Nearby Restaurants Offering "{dishName}":</h3>
         <ul>
           {restaurants.map((place, index) => (
             <li key={index} style={{ marginBottom: "15px" }}>
               <strong>{place.name}</strong> — {place.vicinity}. 
               <strong> Rating⭐ - {place.rating}</strong>
               <a
-                href={`https://www.google.com/maps/place/?q=place_id:${place.place_id}`}
+                href={https://www.google.com/maps/place/?q=place_id:${place.place_id}}
                 target="_blank"
                 rel="noreferrer"
                 className="map-link"
@@ -467,7 +433,7 @@ Respond in the following JSON format ONLY:
   .split('\n')
   .filter(line => line.trim().startsWith("*"))
   .map((line, index) => {
-    const cleaned = line.replace(/^\*+\s*/, '');
+    const cleaned = line.replace(/^\+\s/, '');
     const [heading, ...rest] = cleaned.split(":");
     const content = rest.join(":").trim();
     return (
@@ -484,4 +450,3 @@ Respond in the following JSON format ONLY:
 );
 }
 export default App;
- 
