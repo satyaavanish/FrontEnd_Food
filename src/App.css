@@ -193,15 +193,7 @@ button:focus:not(:active)::after {
   align-items: center;
   gap: 8px;
 }
-.summary-point {
-  margin-bottom: 8px;
-  line-height: 1.6;
-}
-
-.summary-point strong {
-  color: #2a4365; /* Dark blue for headings */
-}
-
+ 
 .summary-button {
   background: #2196f3;
   color: white;
