@@ -7,24 +7,24 @@ function GreetingMessage() {
   useEffect(() => {
     const messages = {
       morning: [
-        "Good morning! Start your day with some fluffy Idli or a bowl of Poha!",
-        "Rise and shine! How about Aloo Paratha or a hot cup of chai?",
-        "Morning vibes! Fuel up with Dosa or Upma.",
+        "Good morning! ☀️ Have a great day!",
+        "Rise and shine! 🌞",
+        "Morning! Time for breakfast!",
       ],
       afternoon: [
-        "Good afternoon! Time for a wholesome Thali or a cool bowl of curd rice?",
-        "Feeling the midday slump? Try a light salad or paneer wrap!",
-        "Afternoon delight! How about some lemon rice or a grilled sandwich?",
+        "Good afternoon! 🕛 Enjoy your meal!",
+        "Afternoon hunger? Grab a bite!",
+        "Lunch time! 🍽️",
       ],
       evening: [
-        "Good evening! Craving something crispy like samosas or pakoras?",
-        "Evening hunger? Warm up with some soup or masala chai & biscuits!",
-        "Time to relax! How about a plate of momos or pav bhaji?",
+        "Good evening! 🌆 Snack time?",
+        "Evening cravings? Try something tasty!",
+        "Relax and enjoy your dinner!",
       ],
       night: [
-        "Good night! A bowl of comforting Khichdi or warm milk would be perfect.",
-        "Unwinding for the day? Try some dal-chawal or a light salad.",
-        "Late hours call for comfort food – maybe curd rice or a warm soup?",
+        "Good night! 🌙 Sleep well!",
+        "Late-night munchies? Keep it light!",
+        "Time to unwind! 😴",
       ],
     };
 
