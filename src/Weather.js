@@ -74,7 +74,7 @@ const summaryRef = useRef(null);
   const searchNearbyRestaurants = async (lat, lng, keyword) => {
     setRestaurantsLoading(true);
     try {
-      const res = await axios.get("http://localhost:5000/api/places", {
+      const res = await axios.get("https://backend-food-i0h7.onrender.com/api/places", {
         params: {
           lat: lat,
           lng: lng,
