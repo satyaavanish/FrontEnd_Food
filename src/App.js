@@ -222,7 +222,7 @@ setSummaryText(cleanedSummary);
       console.error("API Error:", err);
       let errorMessage = "Failed to generate summary";
       if (err.response?.data?.error?.message) {
-        errorMessage += : ${err.response.data.error.message};
+        errorMessage += `: ${err.response.data.error.message}`;
       }
       setSummaryText(`${errorMessage}. Please try again later.`);
     } finally {
