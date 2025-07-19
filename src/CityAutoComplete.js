@@ -11,7 +11,6 @@ const CityAutoComplete = ({ onSelect }) => {
   const [activeIndex, setActiveIndex] = useState(-1);
   const wrapperRef = useRef(null);
 
-  // Close suggestions when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -24,7 +23,7 @@ const CityAutoComplete = ({ onSelect }) => {
     };
   }, []);
 
-  // Debounce API calls
+
   useEffect(() => {
     const timer = setTimeout(() => {
       if (input.trim().length >= 2) {
@@ -93,7 +92,6 @@ const CityAutoComplete = ({ onSelect }) => {
   };
 
   const handleKeyDown = (e) => {
-    // Keyboard navigation
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       setActiveIndex(prev => (prev < suggestions.length - 1 ? prev + 1 : prev));
@@ -115,7 +113,7 @@ const CityAutoComplete = ({ onSelect }) => {
         value={input}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        placeholder="Search for a city worldwide..."
+        placeholder="Enter City Name"
         className="city-input"
         aria-autocomplete="list"
         aria-expanded={showSuggestions && suggestions.length > 0}
