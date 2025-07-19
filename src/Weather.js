@@ -165,6 +165,10 @@ const summaryRef = useRef(null);
       }
 
       const summary = response.data.candidates[0].content.parts[0].text;
+         summary = summary
+      .replace(/\*\*/g, '') // Remove all **
+      .replace(/•/g, '-')    // Standardize bullet points
+      .replace(/^\s*[\r\n]/gm, '');
       setSummaryText(summary);
     } catch (err) {
       console.error("API Error:", err);
