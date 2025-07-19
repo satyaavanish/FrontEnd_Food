@@ -55,7 +55,7 @@ const randomFact = foodFacts[Math.floor(Math.random() * foodFacts.length)];
     <div className="main-page">
       <div className="header-section">
         <div className="typewriter">
-  <h1 className="main-title">Smart Food Companion</h1>
+  <h1 className="main-title">Snap Detect Eat</h1>
 </div>
 
         <GreetingMessage />
