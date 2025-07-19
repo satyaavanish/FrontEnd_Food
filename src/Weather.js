@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState,useRef,useEffect } from 'react';
 import axios from 'axios';
 import './Weather.css';
 import { useNavigate } from "react-router-dom";
-
+import CityAutoComplete from './CityAutoComplete';
 function WeatherFoodSuggestions() {
-  const [city, setCity] = useState('');
+    const [city, setCity] = useState('');
   const [restaurants, setRestaurants] = useState([]);
   const [location, setLocation] = useState({ lat: null, lng: null });
   const [locationError, setLocationError] = useState("");
@@ -17,10 +17,10 @@ function WeatherFoodSuggestions() {
   const [summaryText, setSummaryText] = useState("");
   const [isSummarizing, setIsSummarizing] = useState(false);
   const navigate = useNavigate();
+    
   const restaurantResultsRef = useRef(null);
   const GEMINI_API_KEY = process.env.REACT_APP_PLACES_KEY;
-  const summaryRef = useRef(null);
-
+const summaryRef = useRef(null);
   const scrollToRestaurants = () => {
     setTimeout(() => {
       restaurantResultsRef.current?.scrollIntoView({ 
@@ -29,7 +29,8 @@ function WeatherFoodSuggestions() {
       });
     }, 100);
   };
-
+   
+   
   const getWeatherCondition = (weatherData) => {
     const main = weatherData.main.toLowerCase();
     const description = weatherData.description.toLowerCase();
@@ -73,7 +74,7 @@ function WeatherFoodSuggestions() {
   const searchNearbyRestaurants = async (lat, lng, keyword) => {
     setRestaurantsLoading(true);
     try {
-      const res = await axios.get("https://backend-food-i0h7.onrender.com/api/places", {
+      const res = await axios.get("http://localhost:5000/api/places", {
         params: {
           lat: lat,
           lng: lng,
@@ -109,7 +110,7 @@ function WeatherFoodSuggestions() {
       const geoRes = await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
         params: {
           address: city,
-          key: GEMINI_API_KEY
+          key:  GEMINI_API_KEY
         }
       });
 
@@ -129,7 +130,6 @@ function WeatherFoodSuggestions() {
       setError("Failed to search location. Check network or API key.");
     }
   };
-
   const generateSummary = async () => {
     if (!selectedFood?.name) return;
 
@@ -143,16 +143,14 @@ function WeatherFoodSuggestions() {
           contents: [{
             parts: [{
               text: `Provide 8 concise bullet points about the Indian dish "${selectedFood.name}" covering:
-- Origin Region
-- Main Ingredients (3-5)
-- Flavor Profile
-- Cooking Method
-- Typical Serving Occasion
-- Nutritional Benefit
-- Common Variations
-- Cultural Significance
-
-Return each point on a new line starting with "-" and separate the heading from content with ":"`
+• Origin Region
+• Main Ingredients (3-5)
+• Flavor Profile
+• Cooking Method
+• Typical Serving Occasion
+• Nutritional Benefit
+• Common Variations
+• Cultural Significance`
             }]
           }]
         },
@@ -168,25 +166,25 @@ Return each point on a new line starting with "-" and separate the heading from 
         throw new Error("Empty response from API");
       }
 
-      const rawText = response.data.candidates[0].content.parts[0].text;
-      const cleanedText = rawText
-        .replace(/\*\*/g, '')
-        .replace(/•/g, '-')
-        .replace(/^\s*[\r\n]/gm, '');
-
-      setSummaryText(cleanedText);
+      const summary = response.data.candidates[0].content.parts[0].text;
+      setSummaryText(summary);
     } catch (err) {
       console.error("API Error:", err);
-      setSummaryText("Failed to generate summary. Please try again later.");
+      let errorMessage = "Failed to generate summary";
+      if (err.response?.data?.error?.message) {
+        errorMessage += `: ${err.response.data.error.message}`;
+      }
+      setSummaryText(`${errorMessage}. Please try again later.`);
     } finally {
-      setIsSummarizing(false);
-      setTimeout(() => {
-        summaryRef.current?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    }
-  };
+  setIsSummarizing(false);
+  setTimeout(() => {
+    summaryRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, 100);
+}
 
-  const foodDatabase = {
+  };
+ 
+    const foodDatabase = {
     rain: [
       { name: 'Masala Chai', image: 'https://www.thespicehouse.com/cdn/shop/articles/Chai_Masala_Tea_1200x1200.jpg?v=1606936195', description: 'Spiced Indian tea' },
       { name: 'Samosa', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTn04uUqeqGZjOb0xLqsVNhWryUfDCvwHgrHg&', description: 'Crispy fried pastry' },
@@ -247,21 +245,21 @@ Return each point on a new line starting with "-" and separate the heading from 
       { name: 'Bread Omelette', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXlrt2nwEXKSTmBrmA69ZCe-O71W2FXeLKEQ&s', description: 'Simple protein' },
       { name: 'Milk and Biscuits', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS85scQFuK2brhqIm1VVhnx0SumcVoVQZcwPg&s', description: 'Childhood comfort' }
     ],
+   
   };
-
-  const defaultFoods = [
+const defaultFoods=[
     { name: 'Biryani', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRv7RHxmRPYgze_kPFz1v6Mcdu0LF9vVZaPQ&s', description: 'Flavorful rice' },
-    { name: 'Dal Chawal', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTq4TpfPWyr4vCtmG_eeOempMMYuhz7B7x3YQ&s', description: 'Lentils and rice' },
-    { name: 'Roti Sabzi', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0-e_8YdCTTplg3Kc-0lGeoM0hpsmlXZ9IkA&s', description: 'Bread with veggies' },
-    { name: 'Butter Chicken', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRILgjZ4E3Psrc-PN_ZLbBOh2-EM7AH2XAm9Q&s', description: 'Creamy curry' },
-    { name: 'Palak Paneer', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkte8ho3c7qf_nwHaJs-2C-yLiJT1LZjK1dg&s', description: 'Spinach with cheese' },
-    { name: 'Dosa', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-fGxLF0XCTT_nJKDtPzTWtlpWHe_0Rzt4OQ&s', description: 'Crispy crepe' },
-    { name: 'Vada', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLKw_wmNjGhfmOAlgss7_PurQDmlh2cQKp7g&s', description: 'Savory donut' },
-    { name: 'Sambar', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwpcpy081doLiNiXrnzvtKSSa6ugKlqTQQaA&s', description: 'Lentil stew' },
-    { name: 'Rasam', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4JpUNOkEaGhYzYg8brhbJE0R87i7Ns5VMVQ&s', description: 'Pepper soup' },
-    { name: 'Payasam', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFeg3wyX68c6SICXdoC2bnf05KG7rQeQOGpQ&s', description: 'Sweet pudding' }
-  ];
-
+      { name: 'Dal Chawal', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTq4TpfPWyr4vCtmG_eeOempMMYuhz7B7x3YQ&s', description: 'Lentils and rice' },
+      { name: 'Roti Sabzi', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0-e_8YdCTTplg3Kc-0lGeoM0hpsmlXZ9IkA&s', description: 'Bread with veggies' },
+      { name: 'Butter Chicken', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRILgjZ4E3Psrc-PN_ZLbBOh2-EM7AH2XAm9Q&s', description: 'Creamy curry' },
+      { name: 'Palak Paneer', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkte8ho3c7qf_nwHaJs-2C-yLiJT1LZjK1dg&s', description: 'Spinach with cheese' },
+      { name: 'Dosa', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-fGxLF0XCTT_nJKDtPzTWtlpWHe_0Rzt4OQ&s', description: 'Crispy crepe' },
+      { name: 'Vada', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLKw_wmNjGhfmOAlgss7_PurQDmlh2cQKp7g&s', description: 'Savory donut' },
+      { name: 'Sambar', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwpcpy081doLiNiXrnzvtKSSa6ugKlqTQQaA&s', description: 'Lentil stew' },
+      { name: 'Rasam', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4JpUNOkEaGhYzYg8brhbJE0R87i7Ns5VMVQ&s', description: 'Pepper soup' },
+      { name: 'Payasam', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFeg3wyX68c6SICXdoC2bnf05KG7rQeQOGpQ&s', description: 'Sweet pudding' }
+]
+ 
   const getWeather = async () => {
     if (!city.trim()) {
       setError('Please enter a city name');
@@ -305,198 +303,193 @@ Return each point on a new line starting with "-" and separate the heading from 
   const handleFoodSelect = (food) => {
     setSelectedFood(food);
     setRestaurants([]);
-    scrollToRestaurants(); 
+     scrollToRestaurants(); 
   };
+ const renderRestaurantSearchUI = () => {
+  if (!selectedFood) return null;
 
-  const renderRestaurantSearchUI = () => {
-    if (!selectedFood) return null;
+  return (
+    <div ref={restaurantResultsRef} className="restaurant-results">
+      <div className="location-button-group">
+  <button 
+    onClick={() => getUserLocation(selectedFood)} 
+    className="location-info"
+    disabled={restaurantsLoading}
+  >
+    📍 Use My Current Location
+  </button>
+  <button 
+    onClick={() => handleManualLocationSearch(selectedFood)}
+    className="manual-search"
+    disabled={restaurantsLoading || !city}
+  >
+    🔍 Search in {city || 'your city'}
+  </button>
+</div>
 
-    return (
-      <div ref={restaurantResultsRef} className="restaurant-results">
-        <div className="location-button-group">
-          <button 
-            onClick={() => getUserLocation(selectedFood)} 
-            className="location-info"
-            disabled={restaurantsLoading}
-          >
-            📍 Use My Current Location
-          </button>
-          <button 
-            onClick={() => handleManualLocationSearch(selectedFood)}
-            className="manual-search"
-            disabled={restaurantsLoading || !city}
-          >
-            🔍 Search in {city || 'your city'}
-          </button>
+
+      {locationError && <p className="error">{locationError}</p>}
+      {restaurantsLoading && <p>Loading restaurants...</p>}
+
+      {restaurants.length > 0 && (
+        <div className="restaurant-list">
+          <h3 style={{color:"red",marginBottom:"20px"}}>🍽️ Nearby Restaurants Offering "{selectedFood.name}":</h3>
+          <ul>
+            {restaurants.map((place, index) => (
+              <li key={index}>
+                <strong>{place.name}</strong> — {place.vicinity}.
+                <strong> Rating: {place.rating ? '⭐'.repeat(Math.round(place.rating)) : 'N/A'}</strong>
+                {place.place_id && (
+                  <a
+                    href={`https://www.google.com/maps/place/?q=place_id:${place.place_id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="map-link"
+                  >
+                    [View on Map]
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
         </div>
+      )}
+    </div>
+  );
+};
 
-        {locationError && <p className="error">{locationError}</p>}
-        {restaurantsLoading && <p>Loading restaurants...</p>}
+return (
+  <div className="weather-food-app">
+    <button onClick={() => navigate("/")} className="back-button">
+      🔙 Home
+    </button>
 
-        {restaurants.length > 0 && (
-          <div className="restaurant-list">
-            <h3 style={{color:"red",marginBottom:"20px"}}>🍽️ Nearby Restaurants Offering "{selectedFood.name}":</h3>
-            <ul>
-              {restaurants.map((place, index) => (
-                <li key={index}>
-                  <strong>{place.name}</strong> — {place.vicinity}.
-                  <strong> Rating: {place.rating ? '⭐'.repeat(Math.round(place.rating)) : 'N/A'}</strong>
-                  {place.place_id && (
-                    <a
-                      href={`https://www.google.com/maps/place/?q=place_id:${place.place_id}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="map-link"
-                    >
-                      [View on Map]
-                    </a>
-                  )}
-                </li>
-              ))}
+    <h1>Weather-Based Food Suggestions</h1>
+
+   
+    <div className="search-container">
+  <CityAutoComplete onSelect={(selectedCity) => {
+    const fullCity = `${selectedCity.name}, ${selectedCity.region}, ${selectedCity.country}`;
+    setCity(fullCity);
+    getWeather();  
+  }} />
+  <button onClick={getWeather} disabled={loading}>
+    {loading ? "Loading..." : "Get Suggestions"}
+  </button>
+</div>
+
+
+    {error && <p className="error-message">{error}</p>}
+
+    {weather ? (
+      <div className="weather-info">
+        <h2>
+          Weather in {city}:{" "}
+          <span className="weather-condition">{weatherDescription}</span>
+        </h2>
+        <h3>Recommended Foods:</h3>
+
+        <div className="food-grid">
+          {getFoodItems().map((food, index) => (
+            <div key={index} className="food-card">
+              <div className="food-image-container">
+                <img
+                  src={food.image}
+                  alt={food.name}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src =
+                      "https://via.placeholder.com/300x200?text=Food+Image";
+                  }}
+                />
+              </div>
+              <h4>{food.name}</h4>
+              <p>{food.description}</p>
+              <button
+                onClick={() => handleFoodSelect(food)}
+                disabled={restaurantsLoading}
+              >
+                {restaurantsLoading && selectedFood?.name === food.name
+                  ? "Searching..."
+                  : "Get Nearby Restaurants"}
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    ) : (
+      <div className="default-foods">
+        <h2>🍽️ Popular Indian Dishes</h2>
+        <p className="city-prompt">
+          Enter your city to get personalized weather-based suggestions.
+        </p>
+
+        <div className="food-grid">
+          {defaultFoods.map((food, index) => (
+            <div key={index} className="food-card">
+              <div className="food-image-container">
+                <img
+                  src={food.image}
+                  alt={food.name}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src =
+                      "https://via.placeholder.com/300x200?text=Food+Image";
+                  }}
+                />
+              </div>
+              <h4>{food.name}</h4>
+              <p>{food.description}</p>
+              <button
+                onClick={() => handleFoodSelect(food)}
+                disabled={restaurantsLoading}
+              >
+                {restaurantsLoading && selectedFood?.name === food.name
+                  ? "Searching..."
+                  : "Get Nearby Restaurants"}
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+ 
+    {selectedFood && (
+      <div className="summary-section">
+        <button
+          onClick={generateSummary} style={{height:"40px"}}
+          disabled={isSummarizing}
+          className="summary-button" 
+        >
+       {isSummarizing
+  ? "Generating..."
+  : `📖 Info About Dish ${selectedFood?.name || ""}`}
+
+        </button>
+
+        {summaryText && (
+          <div className="summary-container" ref={summaryRef}>
+            <h3 className="summary-title">
+              📘 Key Facts About {selectedFood.name}:
+            </h3>
+            <ul className="summary-list">
+              {summaryText
+                .split("\n")
+                .filter((line) => line.trim().length > 0)
+                .map((line, index) => (
+                  <li key={index} className="summary-point">
+                    {line.replace(/^\*+\s*/, "").replace(/\*\*/g, "")}
+                  </li>
+                ))}
             </ul>
           </div>
         )}
       </div>
-    );
-  };
-
-  return (
-    <div className="weather-food-app">
-      <button onClick={() => navigate("/")} className="back-button">
-        🔙 Home
-      </button>
-
-      <h1>Weather-Based Food Suggestions</h1>
-
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Enter city name (e.g., Mumbai)"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && getWeather()}
-        />
-        <button onClick={getWeather} disabled={loading}>
-          {loading ? "Loading..." : "Get Suggestions"}
-        </button>
-      </div>
-
-      {error && <p className="error-message">{error}</p>}
-
-      {weather ? (
-        <div className="weather-info">
-          <h2>
-            Weather in {city}:{" "}
-            <span className="weather-condition">{weatherDescription}</span>
-          </h2>
-          <h3 style={{color:"red"}}>Recommended Foods:</h3>
-
-          <div className="food-grid">
-            {getFoodItems().map((food, index) => (
-              <div key={index} className="food-card">
-                <div className="food-image-container">
-                  <img
-                    src={food.image}
-                    alt={food.name}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src =
-                        "https://via.placeholder.com/300x200?text=Food+Image";
-                    }}
-                  />
-                </div>
-                <h4>{food.name}</h4>
-                <p>{food.description}</p>
-                <button
-                  onClick={() => handleFoodSelect(food)}
-                  disabled={restaurantsLoading}
-                >
-                  {restaurantsLoading && selectedFood?.name === food.name
-                    ? "Searching..."
-                    : "Get Nearby Restaurants"}
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="default-foods">
-          <h2>🍽️ Popular Indian Dishes</h2>
-          <p className="city-prompt">
-            Enter your city to get personalized weather-based suggestions.
-          </p>
-
-          <div className="food-grid">
-            {defaultFoods.map((food, index) => (
-              <div key={index} className="food-card">
-                <div className="food-image-container">
-                  <img
-                    src={food.image}
-                    alt={food.name}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src =
-                        "https://via.placeholder.com/300x200?text=Food+Image";
-                    }}
-                  />
-                </div>
-                <h4>{food.name}</h4>
-                <p>{food.description}</p>
-                <button
-                  onClick={() => handleFoodSelect(food)}
-                  disabled={restaurantsLoading}
-                >
-                  {restaurantsLoading && selectedFood?.name === food.name
-                    ? "Searching..."
-                    : "Get Nearby Restaurants"}
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {selectedFood && (
-        <div className="summary-section">
-          <button
-            onClick={generateSummary}
-            style={{height:"40px"}}
-            disabled={isSummarizing}
-            className="summary-button" 
-          >
-            {isSummarizing
-              ? "Generating..."
-              : `📖 Info About Dish ${selectedFood?.name || ""}`}
-          </button>
-
-          {summaryText && (
-            <div className="summary-container" ref={summaryRef}>
-              <h3 className="summary-title">
-                📘 Key Facts About {selectedFood.name}:
-              </h3>
-              <div className="summary-content">
-                {summaryText.split('\n')
-                  .filter(line => line.trim().startsWith('-') && line.includes(':'))
-                  .map((line, index) => {
-                    const cleaned = line.replace(/^-\s*/, '').trim();
-                    const [heading, ...contentParts] = cleaned.split(':');
-                    const content = contentParts.join(':').trim();
-                    
-                    return (
-                      <div key={index} className="summary-point">
-                        {heading && <strong>{heading.trim()}:</strong>} {content}
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {renderRestaurantSearchUI()}
-    </div>
-  );
+    )}
+ 
+    {renderRestaurantSearchUI()}
+  </div>
+);
 }
 
 export default WeatherFoodSuggestions;
