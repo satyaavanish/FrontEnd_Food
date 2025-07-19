@@ -1,0 +1,119 @@
+.city-autocomplete {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.city-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.city-input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  color: #666;
+  font-size: 14px;
+}
+
+.spinner {
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 2px solid #4a90e2;
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  padding: 10px;
+  color: #e74c3c;
+  font-size: 14px;
+  background-color: #fdecea;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+.suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  margin-top: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  padding: 0;
+}
+
+.suggestion-item {
+  padding: 12px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.suggestion-item:hover, .suggestion-item.active {
+  background-color: #f5f8ff;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.city-name {
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.city-details {
+  color: #666;
+  font-size: 14px;
+  flex-grow: 1;
+}
+
+.country-flag {
+  width: 20px;
+  height: 15px;
+  margin-left: 10px;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+}
+
+/* For country flags - requires flag-icon-css library */
+.fi {
+  background-size: contain;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  position: relative;
+  display: inline-block;
+  width: 1.33333333em;
+  line-height: 1em;
+}
