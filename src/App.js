@@ -30,7 +30,37 @@ const summaryRef = useRef(null);
   const [citySuggestions, setCitySuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const suggestionsRef = useRef(null);
+const fetchCitySuggestions = async (input) => {
+    if (input.length < 2) {
+      setCitySuggestions([]);
+      return;
+    }
 
+    try {
+      const response = await axios.get(
+        `https://api.teleport.org/api/cities/?search=${input}&limit=5`
+      );
+      const suggestions = response.data._embedded["city:search-results"]
+        .map(item => item.matching_full_name)
+        .filter(name => name);
+      setCitySuggestions(suggestions);
+      setShowSuggestions(true);
+    } catch (error) {
+      console.error("Error fetching city suggestions:", error);
+      setCitySuggestions([]);
+    }
+  };
+    const handleManualLocationChange = (e) => {
+    const value = e.target.value;
+    setManualLocation(value);
+    fetchCitySuggestions(value);
+  };
+   const selectSuggestion = (suggestion) => {
+    setManualLocation(suggestion);
+    setShowSuggestions(false);
+    // Optionally trigger search automatically
+    // handleManualLocationSearch();
+  };
   const scrollToRestaurants = () => {
     setTimeout(() => {
       restaurantResultsRef.current?.scrollIntoView({ 
