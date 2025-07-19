@@ -63,19 +63,19 @@ const randomFact = foodFacts[Math.floor(Math.random() * foodFacts.length)];
 
       <div className="button-container">
         <button onClick={() => navigate("/detect")} className="nav-button detect-btn">
-          🍽️ Detect Food
+          📸 Snap & 🍽️ Detect
         </button>
 
         <button onClick={() => navigate("/weather")} className="nav-button weather-btn">
-          🌤️ Weather Suggestions
+           🌤️ Weather-Based Picks
         </button>
 
         <button onClick={() => navigate("/health")} className="nav-button health-btn">
-          🍏 Health Suggestions
+          🍏 Wellness Picks
         </button>
 
         <button onClick={() => navigate("/news")} className="nav-button news-btn">
-          📰 Food News
+           📰 Food Buzz & Trends
         </button>
       </div>
 
