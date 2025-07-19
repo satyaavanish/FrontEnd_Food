@@ -139,7 +139,7 @@ const CityAutoComplete = ({ onSelect }) => {
               onClick={() => handleSelect(city)}
               className={`suggestion-item ${index === activeIndex ? 'active' : ''}`}
               role="option"
-              aria-selected={index === activeIndex}
+              aria-selected={index === activeIndex} style={{color:"black"}}
             >
               <span className="city-name">{city.name}</span>
               <span className="city-details">
