@@ -128,19 +128,19 @@ const summaryRef = useRef(null);
       setError("Failed to search location. Check network or API key.");
     }
   };
-  const generateSummary = async () => {
-    if (!selectedFood?.name) return;
+ const generateSummary = async () => {
+  if (!selectedFood?.name) return;
 
-    setIsSummarizing(true);
-    setSummaryText("");
+  setIsSummarizing(true);
+  setSummaryText("");
 
-    try {
-      const response = await axios.post(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`,
-        {
-          contents: [{
-            parts: [{
-              text: `Provide 8 concise bullet points about the Indian dish "${selectedFood.name}" covering:
+  try {
+    const response = await axios.post(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        contents: [{
+          parts: [{
+            text: `Provide 8 concise bullet points about the Indian dish "${selectedFood.name}" covering:
 • Origin Region
 • Main Ingredients (3-5)
 • Flavor Profile
@@ -149,42 +149,42 @@ const summaryRef = useRef(null);
 • Nutritional Benefit
 • Common Variations
 • Cultural Significance`
-            }]
           }]
+        }]
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          timeout: 10000
-        }
-      );
-
-      if (!response.data?.candidates?.[0]?.content?.parts?.[0]?.text) {
-        throw new Error("Empty response from API");
+        timeout: 10000
       }
+    );
 
-      const summary = response.data.candidates[0].content.parts[0].text;
-         summary = summary
-      .replace(/\*\*/g, '') // Remove all **
-      .replace(/•/g, '-')    // Standardize bullet points
-      .replace(/^\s*[\r\n]/gm, '');
-      setSummaryText(summary);
-    } catch (err) {
-      console.error("API Error:", err);
-      let errorMessage = "Failed to generate summary";
-      if (err.response?.data?.error?.message) {
-        errorMessage += `: ${err.response.data.error.message}`;
-      }
-      setSummaryText(`${errorMessage}. Please try again later.`);
-    } finally {
-  setIsSummarizing(false);
-  setTimeout(() => {
-    summaryRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, 100);
-}
+    if (!response.data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+      throw new Error("Empty response from API");
+    }
 
-  };
+     
+    setSummaryText(
+      response.data.candidates[0].content.parts[0].text
+        .replace(/\*\*/g, '') // Remove all **
+        .replace(/•/g, '-')    // Standardize bullet points
+        .replace(/^\s*[\r\n]/gm, '')
+    );
+  } catch (err) {
+    console.error("API Error:", err);
+    let errorMessage = "Failed to generate summary";
+    if (err.response?.data?.error?.message) {
+      errorMessage += `: ${err.response.data.error.message}`;
+    }
+    setSummaryText(`${errorMessage}. Please try again later.`);
+  } finally {
+    setIsSummarizing(false);
+    setTimeout(() => {
+      summaryRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  }
+};
  
     const foodDatabase = {
     rain: [
