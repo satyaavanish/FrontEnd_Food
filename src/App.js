@@ -410,19 +410,14 @@ Respond in the following JSON format ONLY:
       </div>
     )}
 
-    {summaryText
+ {summaryText
   .split('\n')
   .filter(line => line.trim().startsWith("*"))
-  .map((line, index) => {
-    const cleaned = line.replace(/^\*+\s*/, '');
-    const [heading, ...rest] = cleaned.split(":");
-    const content = rest.join(":").trim();
-    return (
-      <li key={index} className="summary-point">
-        <strong>{heading}:</strong> {content}
-      </li>
-    );
-  })}
+  .map((line, index) => (
+    <li key={index} className="summary-point">
+      {line.replace(/^\*+\s*/, '')}
+    </li>
+))}
 
   </div>
 );
