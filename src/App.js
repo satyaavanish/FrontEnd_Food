@@ -1,6 +1,6 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { dishObserver } from './Observer'; // or correct relative path
+import { dishObserver } from './Observer'; 
 import './App.css';
 import Main from "./Main";
 import { useNavigate } from "react-router-dom";
@@ -27,6 +27,7 @@ function App() {
   const [detectedFood, setDetectedFood] = useState("");
 const summaryRef = useRef(null);
    
+  const suggestionsRef = useRef(null);
 
   const scrollToRestaurants = () => {
     setTimeout(() => {
@@ -36,21 +37,8 @@ const summaryRef = useRef(null);
       });
     }, 100);
   };
-useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target)) {
-        setShowSuggestions(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-   const handleCitySelect = (city) => {
-    console.log("Selected city:", city.name, city.country);
-    
-  };
+
+   
   const getUserLocation = async () => {
     if (!navigator.geolocation) {
       setLocationError("Geolocation is not supported by your browser.");
