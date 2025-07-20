@@ -743,7 +743,7 @@ function WeatherFoodSuggestions() {
           radius: 5000,
           keyword: `${keyword} ${cuisine} restaurant`,
           type: 'restaurant',
-          key: process.env.REACT_APP_GOOGLE_MAPS_KEY
+          key: process.env.REACT_APP_PLACES_KEY
         }
       });
       
@@ -765,43 +765,64 @@ function WeatherFoodSuggestions() {
     }
   };
 
-  // Generate food summary using Spoonacular's recipe information
-  const generateSummary = async (recipeId) => {
-    if (!recipeId) return;
+   const generateSummary = async (foodItem) => {
+  if (!foodItem?.name) return;
 
-    setIsSummarizing(true);
-    setSummaryText("");
+  setIsSummarizing(true);
+  setSummaryText("");
 
-    try {
-      const response = await axios.get(`https://api.spoonacular.com/recipes/${recipeId}/information`, {
-        params: {
-          apiKey: "df9604c662314fef9cdbc4fd3226f1e1",
-          includeNutrition: false
+  try {
+    // First try to use Spoonacular's summary if available
+    if (foodItem.summary) {
+      const cleanSummary = foodItem.summary
+        .replace(/<a[^>]*>/g, '')
+        .replace(/<\/a>/g, '')
+        .replace(/<b>/g, '')
+        .replace(/<\/b>/g, '');
+      setSummaryText(cleanSummary);
+    } 
+    // Fallback to Gemini API for structured info
+    else {
+      const response = await axios.post(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          contents: [{
+            parts: [{
+              text: `Provide 8 concise bullet points about the ${cuisine} dish "${foodItem.name}" covering:
+• Origin Region
+• Main Ingredients (3-5)
+• Flavor Profile
+• Cooking Method
+• Typical Serving Occasion
+• Nutritional Benefit
+• Common Variations
+• Cultural Significance`
+            }]
+          }]
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+          timeout: 10000
         }
-      });
+      );
 
-      if (response.data && response.data.summary) {
-        // Clean up the summary HTML
-        const cleanSummary = response.data.summary
-          .replace(/<a[^>]*>/g, '')
-          .replace(/<\/a>/g, '')
-          .replace(/<b>/g, '')
-          .replace(/<\/b>/g, '');
-        
-        setSummaryText(cleanSummary);
+      if (response.data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+        setSummaryText(response.data.candidates[0].content.parts[0].text);
       } else {
-        setSummaryText("No detailed information available for this dish.");
+        throw new Error("Empty response from API");
       }
-    } catch (err) {
-      console.error("API Error:", err);
-      setSummaryText("Failed to fetch dish information. Please try again later.");
-    } finally {
-      setIsSummarizing(false);
-      setTimeout(() => {
-        summaryRef.current?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
     }
-  };
+  } catch (err) {
+    console.error("API Error:", err);
+    setSummaryText(`Could not generate detailed information about ${foodItem.name}.`);
+  } finally {
+    setIsSummarizing(false);
+    setTimeout(() => {
+      summaryRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  }
+};
+
 
   // Scroll to restaurants section
   const scrollToRestaurants = () => {
