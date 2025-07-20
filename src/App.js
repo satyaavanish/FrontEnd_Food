@@ -481,7 +481,11 @@ Respond in the following JSON format ONLY:
   //     </li>
   //   );
   // })}
-{summaryText
+   {summaryText && (
+      <div className="summary-container" ref={summaryRef}>
+        <h3 className="summary-title">📘 Key Facts About {dishName}:</h3>
+        <ul className="summary-list">
+          {summaryText
   .split('\n')
   .filter(line => line.trim().startsWith("*"))
   .map((line, index) => {
@@ -495,7 +499,6 @@ Respond in the following JSON format ONLY:
       </li>
     );
   })}
-
         </ul>
       </div>
     )}
