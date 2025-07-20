@@ -470,7 +470,8 @@ Respond in the following JSON format ONLY:
   .split('\n')
   .filter(line => line.trim().startsWith("*"))
   .map((line, index) => {
-    const cleaned = line.replace(/^\+\s/, '');
+   
+    const cleaned = line.replace(/^\*+/, '');
     const [heading, ...rest] = cleaned.split(":");
     const content = rest.join(":").trim();
     return (
