@@ -471,7 +471,8 @@ Respond in the following JSON format ONLY:
   .filter(line => line.trim().startsWith("*"))
   .map((line, index) => {
    
-    const cleaned = line.replace(/^\*+/, '');
+    const cleaned = line.replace(/^\*+\s*|\s*\*+$/g, '').trim();
+
     const [heading, ...rest] = cleaned.split(":");
     const content = rest.join(":").trim();
     return (
