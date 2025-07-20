@@ -420,7 +420,7 @@ return (
     ) : (
       <div className="default-foods">
         <h2>🍽️ Popular Indian Dishes</h2>
-        <p className="city-prompt">
+        <p className="city-prompt" style={{color:"white"}}>
           Enter your city to get personalized weather-based suggestions.
         </p>
 
