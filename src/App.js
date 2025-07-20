@@ -462,19 +462,33 @@ Respond in the following JSON format ONLY:
       </div>
     )}
      
-    {summaryText && (
-      <div className="summary-container" ref={summaryRef}>
-        <h3 className="summary-title">📘 Key Facts About {dishName}:</h3>
-        <ul className="summary-list">
-          {summaryText
+  //   {summaryText && (
+  //     <div className="summary-container" ref={summaryRef}>
+  //       <h3 className="summary-title">📘 Key Facts About {dishName}:</h3>
+  //       <ul className="summary-list">
+  //         {summaryText
+  // .split('\n')
+  // .filter(line => line.trim().startsWith("*"))
+  // .map((line, index) => {
+   
+  //   const cleaned = line.replace(/^\*+\s*|\s*\*+$/g, '').trim();
+
+  //   const [heading, ...rest] = cleaned.split(":");
+  //   const content = rest.join(":").trim();
+  //   return (
+  //     <li key={index} className="summary-point">
+  //       <strong>{heading}:</strong> {content}
+  //     </li>
+  //   );
+  // })}
+{summaryText
   .split('\n')
   .filter(line => line.trim().startsWith("*"))
   .map((line, index) => {
-   
-    const cleaned = line.replace(/^\*+\s*|\s*\*+$/g, '').trim();
-
-    const [heading, ...rest] = cleaned.split(":");
-    const content = rest.join(":").trim();
+    const cleaned = line.replace(/^\*+\s*|\s*\*+$/g, '').trim(); // remove leading/trailing *
+    const [headingRaw, ...rest] = cleaned.split(':');
+    const heading = headingRaw.replace(/\*+/g, '').trim(); // remove ** from heading
+    const content = rest.join(':').replace(/\*+/g, '').trim(); // remove ** from content
     return (
       <li key={index} className="summary-point">
         <strong>{heading}:</strong> {content}
