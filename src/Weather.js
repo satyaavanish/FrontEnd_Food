@@ -518,7 +518,7 @@ function WeatherFoodSuggestions() {
   const [foodItems, setFoodItems] = useState([]);
   const [foodLoading, setFoodLoading] = useState(false);
   const navigate = useNavigate();
-  
+    const GEMINI_API_KEY = process.env.REACT_APP_PLACES_KEY;
   const restaurantResultsRef = useRef(null);
   const SPOONACULAR_API_KEY = process.env.REACT_APP_SPOONACULAR_KEY;
   const OPENWEATHER_API_KEY = process.env.REACT_APP_OPENWEATHER_KEY;
