@@ -470,17 +470,17 @@ Respond in the following JSON format ONLY:
   .split('\n')
   .filter(line => line.trim().startsWith("*"))
   .map((line, index) => {
-   
-    const cleaned = line.replace(/^\*+\s*|\s*\*+$/g, '').trim();
-
-    const [heading, ...rest] = cleaned.split(":");
-    const content = rest.join(":").trim();
+    const cleaned = line.replace(/^\*+\s*|\s*\*+$/g, '').trim(); // remove leading/trailing *
+    const [headingRaw, ...rest] = cleaned.split(':');
+    const heading = headingRaw.replace(/\*+/g, '').trim(); // remove ** from heading
+    const content = rest.join(':').replace(/\*+/g, '').trim(); // remove ** from content
     return (
       <li key={index} className="summary-point">
         <strong>{heading}:</strong> {content}
       </li>
     );
   })}
+
  
         </ul>
       </div>
