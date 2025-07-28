@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import './Weather.css';
