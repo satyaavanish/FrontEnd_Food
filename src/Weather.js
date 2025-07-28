@@ -490,9 +490,14 @@ function WeatherFoodSuggestions() {
           setCity(fullCity);
         }} />
         
-        <button onClick={getWeather} disabled={loading} style={{width:"150px"}}>
-          {loading ? "Loading..." : "Get Suggestions"}
-        </button>
+         <button 
+  onClick={getWeather} 
+  disabled={loading} 
+  className="suggestion-button"
+>
+  {loading ? "Loading..." : "Get Suggestions"}
+</button>
+
 
         <select
           className="cuisine-dropdown"
