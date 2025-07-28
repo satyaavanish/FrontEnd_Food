@@ -45,7 +45,7 @@ function WeatherFoodSuggestions() {
       top: scrollPosition,
       behavior: 'smooth'
     });
-  }, 200); / 
+  }, 200); 
 };
   const getWeatherCondition = (weatherData) => {
     const main = weatherData.main.toLowerCase();
