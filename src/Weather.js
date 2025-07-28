@@ -483,90 +483,81 @@ function WeatherFoodSuggestions() {
       </>
     );
   };
+ return (
+  <div className="weather-food-app">
+    <button onClick={() => navigate("/")} className="back-button">
+      🔙 Home
+    </button>
 
-  return (
-    <div className="weather-food-app">
-      <button onClick={() => navigate("/")} className="back-button">
-        🔙 Home
+    <h1>Weather-Based Food Suggestions</h1>
+
+    <div className="search-container">
+      <CityAutoComplete onSelect={(selectedCity) => {
+        const fullCity = `${selectedCity.name}, ${selectedCity.region}, ${selectedCity.country}`;
+        setCity(fullCity);
+      }} />
+      
+      <button onClick={getWeather} disabled={loading}>
+        {loading ? "Loading..." : "Get Suggestions"}
       </button>
 
-      <h1>Weather-Based Food Suggestions</h1>
+      <select
+        className="cuisine-dropdown"
+        value={selectedCuisine}
+        onChange={(e) => {
+          setSelectedCuisine(e.target.value);
+          fetchCuisineFoods(e.target.value);
+        }}
+      >
+        <option value="">Select Cuisine Type</option>
+        {cuisineOptions.map((cuisine, index) => (
+          <option key={index} value={cuisine}>
+            {cuisine}
+          </option>
+        ))}
+      </select>
+    </div>
 
-      <div className="search-container">
-        <CityAutoComplete onSelect={(selectedCity) => {
-          const fullCity = `${selectedCity.name}, ${selectedCity.region}, ${selectedCity.country}`;
-          setCity(fullCity);
-        }} />
-        
-        <button onClick={getWeather} disabled={loading}>
-          {loading ? "Loading..." : "Get Suggestions"}
+    {error && <p className="error-message">{error}</p>}
+
+    {renderFoodSuggestions()}
+
+    {selectedFood && (
+      <div className="summary-section">
+        <button
+          onClick={generateSummary} 
+          style={{height:"40px"}}
+          disabled={isSummarizing}
+          className="summary-button"
+          aria-label={`Get information about ${selectedFood.name}`}
+        >
+          {isSummarizing
+            ? "Generating..."
+            : `📖 Info About Dish ${selectedFood?.name || ""}`}
         </button>
 
-        <select
-  className="cuisine-dropdown"
-  value={selectedCuisine}
-  onChange={(e) => {
-    setSelectedCuisine(e.target.value);
-    fetchCuisineFoods(e.target.value);
-  }}
->
-  <option value="">Select Cuisine Type</option>
-  {cuisineOptions.map((cuisine, index) => (
-    <option key={index} value={cuisine}>
-      {cuisine}
-    </option>
-  ))}
-</select>
-          <option value="">Select Cuisine Type</option>
-          {cuisineOptions.map((cuisine, index) => (
-            <option key={index} value={cuisine}>
-              {cuisine}
-            </option>
-          ))}
-        </select>
+        {summaryText && (
+          <div className="summary-container" ref={summaryRef}>
+            <h3 className="summary-title">
+              📘 Key Facts About {selectedFood.name}:
+            </h3>
+            <ul className="summary-list">
+              {summaryText
+                .split("\n")
+                .filter((line) => line.trim().length > 0)
+                .map((line, index) => (
+                  <li key={index} className="summary-point">
+                    {line.replace(/^\*+\s*/, "").replace(/\*\*/g, "")}
+                  </li>
+                ))}
+            </ul>
+          </div>
+        )}
       </div>
-
-      {error && <p className="error-message">{error}</p>}
-
-      {renderFoodSuggestions()}
-
-      {selectedFood && (
-        <div className="summary-section">
-          <button
-            onClick={generateSummary} 
-            style={{height:"40px"}}
-            disabled={isSummarizing}
-            className="summary-button"
-            aria-label={`Get information about ${selectedFood.name}`}
-          >
-            {isSummarizing
-              ? "Generating..."
-              : `📖 Info About Dish ${selectedFood?.name || ""}`}
-          </button>
-
-          {summaryText && (
-            <div className="summary-container" ref={summaryRef}>
-              <h3 className="summary-title">
-                📘 Key Facts About {selectedFood.name}:
-              </h3>
-              <ul className="summary-list">
-                {summaryText
-                  .split("\n")
-                  .filter((line) => line.trim().length > 0)
-                  .map((line, index) => (
-                    <li key={index} className="summary-point">
-                      {line.replace(/^\*+\s*/, "").replace(/\*\*/g, "")}
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      )}
+    )}
  
-      {renderRestaurantSearchUI()}
-    </div>
-  );
-}
+    {renderRestaurantSearchUI()}
+  </div>
+);
 
 export default WeatherFoodSuggestions;
