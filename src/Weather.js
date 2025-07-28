@@ -482,7 +482,7 @@ function WeatherFoodSuggestions() {
       </>
     );
   };
- return (
+return (
   <div className="weather-food-app">
     <button onClick={() => navigate("/")} className="back-button">
       🔙 Home
