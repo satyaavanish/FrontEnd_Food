@@ -318,7 +318,7 @@ button:disabled {
   }
 }
 .suggestion-button {
-  width: 150px;
+  width: 220px;
   padding: 10px 20px;
   background-color: #007bff; /* Bootstrap blue */
   color: white;
