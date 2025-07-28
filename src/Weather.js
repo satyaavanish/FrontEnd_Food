@@ -533,8 +533,8 @@ function WeatherFoodSuggestions() {
   const summaryRef = useRef(null);
   
   // API keys
-  const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-  const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_KEY;
+  const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_PLACES_KEY;
+  const GEMINI_API_KEY = process.env.REACT_APP_PLACES_KEY;
   const OPENWEATHER_API_KEY = "dbb381301fa35a8053f82254fdc183aa";
 
   // Scroll to suggestions after weather data is loaded
