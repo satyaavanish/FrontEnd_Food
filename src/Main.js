@@ -115,7 +115,7 @@ import { useNavigate } from "react-router-dom";
 import GreetingMessage from "./Greeting";
 import Chatbot from "./Chatbot";
 import "./Main.css";
-
+import News from "./News";
 function Main() {
   const navigate = useNavigate();
   const [showChatbot, setShowChatbot] = useState(false);
