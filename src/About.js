@@ -54,10 +54,10 @@ const About = () => {
   <div className="feature-item">
     <div className="step-section">
       <p><strong>Smart Suggestions:</strong> Get food ideas based on current weather using AI insights.</p>
-       <img src="/weather.png" alt="Weather Detection" className="feature-banner" />
+       <img src="/weather.PNG" alt="Weather Detection" className="feature-banner" />
       <ol className="feature-steps">
         <li>📍 Detect your location or choose a city</li>
-        <img src="/weather1.png" alt="Weather Detection" className="feature-banner" />
+        <img src="/weather1.PNG" alt="Weather Detection" className="feature-banner" />
         <li>🌤️ Fetch real-time weather data</li>
         <img src="/weather2.png" alt="Weather Data" className="feature-banner" />
 
@@ -92,7 +92,7 @@ const About = () => {
   <div className="feature-item">
     <div className="step-section">
       <p><strong>Food News:</strong> Stay updated with the latest news in the world of food, nutrition, health, and trends.</p>
-          <img src="/news.png" alt="Fetching News" className="feature-banner" />
+          <img src="/news.PNG" alt="Fetching News" className="feature-banner" />
       <ol className="feature-steps">
         <li>🌐 Automatically fetches real-time food-related news from trusted sources</li>
         <li>📰 Displays curated headlines with summaries and source links</li>
