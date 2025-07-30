@@ -36,7 +36,7 @@ const About = () => {
             <p><strong>Snap & Detect:</strong> Upload a food image and get accurate identification using AI.</p>
             <ol className="feature-steps">
               <li> Take or upload a photo of your meal</li>
-              <img src="/upload.png" className="feature-banner" />
+              <img src="/upload.PNG" className="feature-banner" />
               <li> Scans the image to detect food items</li>
                <img src="/panipuri.png" alt="Snap & Detect Flow" className="feature-banner" />
               <li> Nutrition and ingredients are fetched</li>
