@@ -232,6 +232,28 @@ body.dark-mode, html.dark-mode {
   color: #00bcd4;
  
 }
+@media (max-width: 768px) {
+  .about-navbar {
+    padding: 6px 8px;
+  }
+
+  .about-navbar ul {
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap; 
+    gap: 20px;
+  }
+
+  .about-navbar li {
+    margin: 0 10px;
+    white-space: nowrap;
+  }
+
+  .about-navbar a {
+    font-size: 0.85rem;  
+    padding: 4px 6px;    
+  }
+}
 
 html {
   scroll-behavior: smooth;
