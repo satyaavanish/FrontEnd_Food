@@ -11,7 +11,8 @@ const About = () => {
 
   return (
     <div className="about-container">
-      <button className="back-button" onClick={goHome}> 🔙 Home</button>
+      <button className="back-button" onClick={goHome}> 🔙 Home</button>\
+    <p>How to Use ?>
 <nav className="about-navbar">
   <ul>
     <li><a href="#snap-detect">Snap & Detect</a></li>
