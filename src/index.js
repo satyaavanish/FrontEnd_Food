@@ -8,7 +8,7 @@ import Weather from "./Weather";
 import Chatbot from './Chatbot';
 import News from "./News";
 import Health from "./Health";
- import About from './About'
+ import About from './About';
  import Author from './Author'; 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -20,7 +20,7 @@ root.render(
         <Route path="/chat" element={<Chatbot />} />
         <Route path="/health" element={<Health />} />
            <Route path="/about" element={<About />} />
-      <Route path="/author" element={<Author />} /
+      <Route path="/author" element={<Author />}
     <Route path="/news" element={<News />} />
     </Routes>
   </Router>
