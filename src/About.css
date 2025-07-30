@@ -51,7 +51,12 @@ body.dark-mode, html.dark-mode {
   margin-bottom: 2.5rem;
   text-align: justify;
 }
- 
+ .about-container > p {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
 .about-section {
   margin-bottom: 2.5rem;
   padding: 1rem;
