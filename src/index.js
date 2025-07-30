@@ -8,7 +8,7 @@ import Weather from "./Weather";
 import Chatbot from './Chatbot';
 import News from "./News";
 import Health from "./Health";
- 
+ import About from './About'
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Router>
@@ -18,7 +18,7 @@ root.render(
        <Route path="/weather" element={<Weather />} />
         <Route path="/chat" element={<Chatbot />} />
         <Route path="/health" element={<Health />} />
- 
+           <Route path="/about" element={<About />} />
 <Route path="/news" element={<News />} />
     </Routes>
   </Router>
