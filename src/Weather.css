@@ -1,126 +1,137 @@
  
 .weather-food-app {
-  max-width: 1000px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  padding: 15px;
+  font-family: 'Arial', sans-serif;
+  color: #333;
 }
 
 html {
   scroll-behavior: smooth;
 }
+
  
 .header-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  flex-wrap: wrap;
-  gap: 20px;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 
 .main-title {
   color: #2E7D32;
   margin: 0;
-  flex-shrink: 0;
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: 600;
 }
 
 .back-button {
-  padding: 10px 20px;
-  cursor: pointer;
-  background-color: black;
-  border: 1px solid #dee2e6;
+  padding: 10px 16px;
+  background-color: #000;
+  color: #fff;
+  border: none;
   border-radius: 30px;
-  color: white;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: fit-content;
+  margin: 0 auto;
 }
 
 .back-button:hover {
-  background-color: #e9ecef;
-  border-color: #ced4da;
-  color: black;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background-color: #333;
 }
+
  
 .search-container {
   display: flex;
+  flex-direction: column;
   gap: 10px;
-  align-items: center;
-  flex-grow: 1;
-  max-width: 600px;
+  width: 100%;
+  margin-bottom: 15px;
 }
 
-input {
-  padding: 10px 15px;
-  flex-grow: 1;
-  min-width: 200px;
+.search-container input {
+  padding: 12px 15px;
+  width: 100%;
   border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.2s;
 }
 
-button {
-  padding: 10px 20px;
+.search-container input:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+.search-container button {
+  padding: 12px;
   background-color: #4CAF50;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s;
 }
 
-button:hover:not(:disabled) {
+.search-container button:hover:not(:disabled) {
   background-color: #388E3C;
 }
 
-button:disabled {
+.search-container button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
 }
  
-.error-message, .location-error {
-  color: #e53935;
-  text-align: center;
-  margin: 10px 0;
-}
-
-.weather-info, .default-foods {
-  margin-top: 30px;
-  
-  padding: 20px;
+.weather-info,
+.default-foods {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f9f9f9;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .weather-condition {
   text-transform: capitalize;
   color: #2E7D32;
+  font-weight: 500;
 }
 
 .city-prompt {
   color: #555;
-  font-size: 1.1rem;
+  font-size: 1rem;
   text-align: center;
-  margin: 1rem 0 2rem;
-  font-style: italic;
-  max-width: 80%;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 1rem 0;
   line-height: 1.5;
 }
+
+ 
+.cuisine-dropdown {
+  width: 100%;
+  padding: 10px 15px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+}
+
  
 .food-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: 1fr;
+  gap: 15px;
   margin-top: 20px;
 }
 
@@ -128,16 +139,16 @@ button:disabled {
   background: white;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  transition: transform 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
 }
 
 .food-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
 }
 
 .food-image-container {
-  height: 200px;
+  height: 180px;
   overflow: hidden;
 }
 
@@ -148,98 +159,69 @@ button:disabled {
   transition: transform 0.3s;
 }
 
-.food-card:hover img {
-  transform: scale(1.05);
-}
-
 .food-card h4 {
-  margin: 15px 15px 5px;
+  margin: 12px 12px 6px;
   color: #2E7D32;
+  font-size: 16px;
 }
 
 .food-card p {
-  margin: 0 15px 15px;
+  margin: 0 12px 12px;
   color: #666;
   font-size: 14px;
 }
-
  
 .restaurant-results {
-  margin-top: 50px;
-  scroll-margin-top: 150px;
+  margin-top: 30px;
 }
 
 .location-button-group {
   display: flex;
-  gap: 16px;
-  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
   margin-top: 20px;
-  flex-wrap: wrap;
 }
 
-.location-info, .manual-search {
-  padding: 10px 20px;
-  font-size: 16px;
+.location-info,
+.manual-search {
+  padding: 12px;
   background-color: #3498db;
   color: white;
   border: none;
   border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s;
 }
 
-.location-info:hover:not(:disabled), 
+.location-info:hover:not(:disabled),
 .manual-search:hover:not(:disabled) {
   background-color: #2980b9;
 }
 
 .restaurant-list {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   padding-top: 1rem;
   border-top: 1px solid #eee;
-  scroll-margin-top: 30px;
 }
- 
-@media (max-width: 768px) {
-  .header-container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .search-container {
-    width: 100%;
-  }
-  
-  .city-prompt {
-    font-size: 1rem;
-    max-width: 90%;
-  }
-  
-  .location-button-group {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .location-info, 
-  .manual-search {
-    width: 100%;
-  }
-}
+
  
 .summary-container {
   background: white;
-  padding: 20px;
+  padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   margin-top: 20px;
-  border-left: none;  
 }
 
 .summary-title {
   color: #333;
   margin-top: 0;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;  
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .summary-list {
@@ -249,94 +231,82 @@ button:disabled {
 .summary-list li {
   margin-bottom: 8px;
   line-height: 1.5;
+  font-size: 14px;
 }
-/* Add this to your Weather.css file */
-
-/* Main select container */
-.cuisine-dropdown {
-  padding: 10px 15px;
-  font-size: 16px;
-  border: 2px solid #ff6b6b;
-  border-radius: 25px;
-  background-color: #fff;
-  color: #333;
-  cursor: pointer;
-  outline: none;
-  transition: all 0.3s ease;
-  appearance: none; /* Removes default arrow in some browsers */
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff6b6b'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 15px center;
-  background-size: 20px;
-  min-width: 200px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-/* Hover state */
-.cuisine-dropdown:hover {
-  border-color: #ff4757;
-  box-shadow: 0 4px 8px rgba(255, 107, 107, 0.2);
-}
-
-/* Focus state */
-.cuisine-dropdown:focus {
-  border-color: #ff4757;
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
-}
-
-/* Option styling */
-.cuisine-dropdown option {
-  padding: 10px;
-  background: #fff;
-  color: #333;
+ 
+.error-message,
+.location-error {
+  color: #e53935;
+  text-align: center;
+  margin: 10px 0;
+  font-size: 14px;
 }
 
  
-.cuisine-dropdown option:first-child {
-  color: #999;
-  font-style: italic;
-}
-
- 
-@media (max-width: 768px) {
-  .cuisine-dropdown {
-    width: 100%;
-    margin-top: 10px;
-  }
-}
- 
-@media (prefers-color-scheme: dark) {
-  .cuisine-dropdown {
-    background-color: #333;
-    color: #fff;
-    border-color: #ff6b6b;
+@media (min-width: 600px) {
+  .food-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
   
-  .cuisine-dropdown option {
-    background-color: #333;
-    color: #fff;
+  .search-container {
+    flex-direction: row;
+  }
+  
+  .search-container button {
+    width: auto;
+    min-width: 120px;
+  }
+  
+  .location-button-group {
+    flex-direction: row;
+  }
+  
+  .location-info,
+  .manual-search {
+    width: auto;
+    flex-grow: 1;
   }
 }
-.suggestion-button {
-  width: 220px;
-  padding: 10px 20px;
-  background-color: #007bff; /* Bootstrap blue */
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+
+@media (min-width: 768px) {
+  .weather-food-app {
+    padding: 20px;
+    max-width: 1000px;
+  }
+  
+  .header-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .main-title {
+    font-size: 1.8rem;
+    text-align: left;
+  }
+  
+  .back-button {
+    margin: 0;
+  }
+  
+ 
+  .food-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .search-container {
+    max-width: 600px;
+  }
+  
+  .city-prompt {
+    font-size: 1.1rem;
+    max-width: 80%;
+  }
 }
 
-.suggestion-button:hover {
-  background-color: #0056b3;
-  transform: scale(1.05);
-}
-
-.suggestion-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-  transform: none;
+ 
+@media (min-width: 1200px) {
+  .food-grid {
+    grid-template-columns: repeat(2, minmax(400px, 1fr));
+  }
 }
