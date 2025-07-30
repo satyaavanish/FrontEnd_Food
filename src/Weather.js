@@ -445,7 +445,7 @@ function WeatherFoodSuggestions() {
               Weather in {city}:{" "}
               <span className="weather-condition">{weatherDescription}</span>
             </h2>
-            <h3>Recommended Foods:</h3>
+            <h3 style={{color:"green"}}>Recommended Foods:</h3>
 
             <div className="food-grid">
               {foodsToShow.map((food, index) => renderFoodCard(food, index))}
@@ -482,7 +482,7 @@ function WeatherFoodSuggestions() {
         🔙 Home
       </button>
 
-      <h1>Weather-Based Food Suggestions</h1>
+      <h1 style={{color:"green"}}>Weather-Based Food Suggestions</h1>
 
       <div className="search-container">
         <CityAutoComplete onSelect={(selectedCity) => {
