@@ -107,7 +107,8 @@ const techGrid = {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
   gap: '1rem',
-  marginTop: '1rem'
+  marginTop: '1rem',
+   color:"black"
 };
 
 const boxStyle = (color) => ({
@@ -115,7 +116,8 @@ const boxStyle = (color) => ({
   padding: '1rem',
   borderRadius: '8px',
   borderLeft: `4px solid ${color}`,
-  boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+  boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+   color:"black"
 });
 
 const quoteBox = {
@@ -124,7 +126,8 @@ const quoteBox = {
   backgroundColor: '#f8f9fa',
   borderRadius: '8px',
   textAlign: 'center',
-  borderLeft: '4px solid #3498db'
+  borderLeft: '4px solid #3498db',
+   color:"black"
 };
 
 export default Author;
