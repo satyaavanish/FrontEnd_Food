@@ -23,7 +23,7 @@ const About = () => {
 
       <h1 className="about-title">About Snap Detect Eat</h1>
       <p className="about-text">
-        <strong>Snap Detect Eat</strong> is your intelligent food companion that combines the power of AI and real-time data to make your eating habits healthier and smarter.
+        <strong>Snap Detect Eat</strong> is your intelligent food companion that has real-time data to make your eating habits healthier and smarter.
       </p>
 
       <div className="about-section">
@@ -33,7 +33,7 @@ const About = () => {
      
           <img src="/detect.png" alt="Snap & Detect Flow" className="feature-banner" />
           <div className="step-section">
-            <p><strong>Snap & Detect:</strong> Upload a food image and get accurate identification using AI.</p>
+            <p><strong>Snap & Detect:</strong> Upload a food image and get accurate identification</p>
             <ol className="feature-steps">
               <li> Take or upload a photo of your meal</li>
               <img src="/upload.PNG" className="feature-banner" />
@@ -42,7 +42,7 @@ const About = () => {
               <li> Nutrition and ingredients are fetched</li>
                <img src="/nutrients.png" alt="Snap & Detect Flow" className="feature-banner" />
               <li>Results are shown instantly with suggestions</li>
-               <img src="/info.png" alt="Snap & Detect Flow" className="feature-banner"  />
+               <img src="/info.PNG" alt="Snap & Detect Flow" className="feature-banner"  />
           <img src="/location.png" alt="Snap & Detect Flow" className="feature-banner" />
           <img src="/summary.png" alt="Snap & Detect Flow" className="feature-banner"  />
             </ol>
@@ -53,7 +53,7 @@ const About = () => {
  <h2 id="weather">🌦️ Weather-Based Suggestions</h2>
   <div className="feature-item">
     <div className="step-section">
-      <p><strong>Smart Suggestions:</strong> Get food ideas based on current weather using AI insights.</p>
+      <p><strong>Smart Suggestions:</strong> Get food ideas based on current weather</p>
        <img src="/weather.PNG" alt="Weather Detection" className="feature-banner" />
       <ol className="feature-steps">
         <li>📍 Detect your location or choose a city</li>
