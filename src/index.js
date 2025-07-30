@@ -20,7 +20,7 @@ root.render(
         <Route path="/chat" element={<Chatbot />} />
         <Route path="/health" element={<Health />} />
            <Route path="/about" element={<About />} />
-      <Route path="/author" element={<Author />}
+      <Route path="/author" element={<Author />} />
     <Route path="/news" element={<News />} />
     </Routes>
   </Router>
