@@ -156,27 +156,66 @@ function WeatherFoodSuggestions() {
     }
   };
 
-  const getUserLocation = async (foodItem) => {
-    if (!navigator.geolocation) {
-      setLocationError("Geolocation is not supported by your browser.");
-      return;
-    }
+  // const getUserLocation = async (foodItem) => {
+  //   if (!navigator.geolocation) {
+  //     setLocationError("Geolocation is not supported by your browser.");
+  //     return;
+  //   }
 
-    try {
-      const position = await new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
+  //   try {
+  //     const position = await new Promise((resolve, reject) => {
+  //       navigator.geolocation.getCurrentPosition(resolve, reject);
+  //     });
+
+  //     const { latitude, longitude } = position.coords;
+  //     setLocation({ lat: latitude, lng: longitude });
+  //     setLocationError("");
+  //     await searchNearbyRestaurants(latitude, longitude, foodItem.name);
+  //     scrollToRestaurants(); 
+  //   } catch (err) {
+  //     setLocationError("Unable to retrieve your location. Please enable location services.");
+  //     console.error("Geolocation error:", err);
+  //   }
+  // };
+  const getUserLocation = async (foodItem, cityName) => {
+  if (!navigator.geolocation) {
+    setLocationError("Geolocation is not supported by your browser. Using city-based search instead.");
+    await searchNearbyRestaurantsByCity(cityName, foodItem.name);
+    scrollToRestaurants();
+    return;
+  }
+
+  try {
+    const position = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+        timeout: 10000, // 10 seconds
+        maximumAge: 0,
       });
+    });
 
-      const { latitude, longitude } = position.coords;
-      setLocation({ lat: latitude, lng: longitude });
-      setLocationError("");
-      await searchNearbyRestaurants(latitude, longitude, foodItem.name);
-      scrollToRestaurants(); 
-    } catch (err) {
-      setLocationError("Unable to retrieve your location. Please enable location services.");
-      console.error("Geolocation error:", err);
+    const { latitude, longitude } = position.coords;
+    setLocation({ lat: latitude, lng: longitude });
+    setLocationError("");
+    await searchNearbyRestaurants(latitude, longitude, foodItem.name);
+    scrollToRestaurants();
+
+  } catch (err) {
+    console.warn("Geolocation failed, falling back to city:", err);
+
+    let errorMsg = "Unable to retrieve your location.";
+    if (err.code === 1) errorMsg = "Permission denied. Please allow location access.";
+    if (err.code === 2) errorMsg = "Location unavailable.";
+    if (err.code === 3) errorMsg = "Location request timed out.";
+    setLocationError(errorMsg + " Using city-based search instead.");
+ 
+    if (cityName && cityName.trim() !== "") {
+      await searchNearbyRestaurantsByCity(cityName, foodItem.name);
+      scrollToRestaurants();
     }
-  };
+  }
+};
+
 
   const searchNearbyRestaurants = async (lat, lng, keyword) => {
     setRestaurantsLoading(true);
