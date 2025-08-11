@@ -156,82 +156,28 @@ function WeatherFoodSuggestions() {
     }
   };
 
-  // const getUserLocation = async (foodItem) => {
-  //   if (!navigator.geolocation) {
-  //     setLocationError("Geolocation is not supported by your browser.");
-  //     return;
-  //   }
-
-  //   try {
-  //     const position = await new Promise((resolve, reject) => {
-  //       navigator.geolocation.getCurrentPosition(resolve, reject);
-  //     });
-
-  //     const { latitude, longitude } = position.coords;
-  //     setLocation({ lat: latitude, lng: longitude });
-  //     setLocationError("");
-  //     await searchNearbyRestaurants(latitude, longitude, foodItem.name);
-  //     scrollToRestaurants(); 
-  //   } catch (err) {
-  //     setLocationError("Unable to retrieve your location. Please enable location services.");
-  //     console.error("Geolocation error:", err);
-  //   }
-  // };
-   const getUserLocation = async (foodItem) => {
-  if (!navigator.geolocation) {
-    setLocationError("Geolocation is not supported by your browser.");
-    return;
-  }
-
-  try {
-    // Try GPS first
-    const position = await new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resolve, reject, {
-        enableHighAccuracy: true,
-        timeout: 10000, // 10s timeout for slow mobile GPS
-        maximumAge: 0
-      });
-    });
-
-    const { latitude, longitude } = position.coords;
-    setLocation({ lat: latitude, lng: longitude });
-    setLocationError("");
-    await searchNearbyRestaurants(latitude, longitude, foodItem.name);
-    scrollToRestaurants();
-
-  } catch (err) {
-    console.warn("GPS failed, falling back to city search:", err);
-
-    // Ask user for city name (can be a prompt or a text input UI)
-    const cityName = prompt("Couldn't get GPS location. Please enter your city:");
-
-    if (cityName) {
-      try {
-        await searchNearbyRestaurantsByCity(cityName, foodItem.name);
-        setLocationError("");
-        scrollToRestaurants();
-      } catch (cityErr) {
-        console.error("City-based search failed:", cityErr);
-        setLocationError("Unable to get location or city search results.");
-      }
-    } else {
-      setLocationError("No location available.");
+  const getUserLocation = async (foodItem) => {
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by your browser.");
+      return;
     }
-  }
-};
-const searchNearbyRestaurantsByCity = async (city, foodName) => {
-  try {
-    const response = await fetch(
-      `/api/places?city=${encodeURIComponent(city)}&query=${encodeURIComponent(foodName)}`
-    );
-    if (!response.ok) throw new Error("Places API error");
-    const data = await response.json();
-    setRestaurants(data.results || []);
-  } catch (error) {
-    console.error("City-based search error:", error);
-    throw error;
-  }
-};
+
+    try {
+      const position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+
+      const { latitude, longitude } = position.coords;
+      setLocation({ lat: latitude, lng: longitude });
+      setLocationError("");
+      await searchNearbyRestaurants(latitude, longitude, foodItem.name);
+      scrollToRestaurants(); 
+    } catch (err) {
+      setLocationError("Unable to retrieve your location. Please enable location services.");
+      console.error("Geolocation error:", err);
+    }
+  };
+   
 
 
 
