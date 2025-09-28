@@ -285,14 +285,15 @@ Respond in the following JSON format ONLY:
 
       try {
         const geminiRes = await axios.post(
-          `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-          payload,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+  `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+  payload,
+  {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+);
+
 
         const rawText = geminiRes.data.candidates?.[0]?.content?.parts?.[0]?.text || "";
         let parsed = {};
