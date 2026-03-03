@@ -1,70 +1,229 @@
-# Getting Started with Create React App
+# 🍽️ AI-Powered Food Detection & Nutrition Analysis Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 📌 Project Overview
 
-## Available Scripts
+This project is an **AI-powered Food Detection Web Application** that allows users to upload an image of a dish and receive:
 
-In the project directory, you can run:
+* 🍛 Detected Food Name
+* 🧾 Key Ingredients
+* 🥗 Nutritional Information
+* 🍽️ Nearby Restaurants (offering the same dish)
 
-### `npm start`
+The system integrates AI-based image recognition using **Gemini API**, a backend nutrition database, and location-based services for enhanced user experience.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🚀 Features
 
-### `npm test`
+### 🔍 1. Food Image Detection
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* Users upload a food image.
+* Image is processed using **Gemini API**.
+* Returns:
 
-### `npm run build`
+  * Dish Name
+  * Key Ingredients
+  * Confidence Score (if applicable)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 🥗 2. Nutrition Analysis
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* Backend fetches nutritional values based on detected dish.
+* Displays:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  * Calories
+  * Protein
+  * Carbohydrates
+  * Fats
+  * Vitamins (if available)
 
-### `npm run eject`
+### 🍽️ 3. Nearby Restaurants
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+* Displays restaurants offering the detected dish.
+* Integrated with maps/location services.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 📱 4. Responsive UI
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+* Fully responsive design.
+* Works on desktop, tablet, and mobile devices.
+* Clean and intuitive interface.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## 🏗️ Tech Stack
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 💻 Frontend
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* React.js
+* Tailwind CSS / CSS3
+* Axios (for API calls)
 
-### Code Splitting
+### 🖥️ Backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+* Node.js
+* Express.js
+* REST APIs
 
-### Analyzing the Bundle Size
+### 🧠 AI Integration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+* Gemini API (for food detection & ingredient extraction)
 
-### Making a Progressive Web App
+### 🗄️ Database
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+* MongoDB / MySQL (for storing nutrition data & logs)
 
-### Advanced Configuration
+### 🌍 Other Integrations
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+* Maps API (for nearby restaurants & grocery stores)
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## ⚙️ System Architecture
 
-### `npm run build` fails to minify
+1. User uploads food image.
+2. Frontend sends image to backend.
+3. Backend calls Gemini API.
+4. Gemini returns:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+   * Food Name
+   * Ingredients
+5. Backend queries database for nutrition data.
+6. Backend returns:
+
+   * Food details
+   * Nutrition info
+   * Nearby stores & restaurants
+7. Frontend displays structured results.
+
+---
+
+## 📂 Project Structure
+
+```
+food-detection-app/
+│
+├── client/                 # Frontend (React)
+│   ├── src/
+│   ├── components/
+│   └── pages/
+│
+├── server/                 # Backend (Node + Express)
+│   ├── routes/
+│   ├── controllers/
+│   ├── models/
+│   └── config/
+│
+├── .env
+├── package.json
+└── README.md
+```
+
+---
+
+## 🔑 Environment Variables
+
+Create a `.env` file in the server directory and add:
+
+```
+GEMINI_API_KEY=your_gemini_api_key
+DB_URI=your_database_connection_string
+MAPS_API_KEY=your_maps_api_key
+PORT=5000
+```
+
+---
+
+## 🛠️ Installation & Setup
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/your-username/food-detection-app.git
+cd food-detection-app
+```
+
+### 2️⃣ Install Backend Dependencies
+
+```bash
+cd server
+npm install
+```
+
+### 3️⃣ Install Frontend Dependencies
+
+```bash
+cd ../client
+npm install
+```
+
+### 4️⃣ Run Backend
+
+```bash
+cd server
+npm start
+```
+
+### 5️⃣ Run Frontend
+
+```bash
+cd client
+npm start
+```
+
+Application will run at:
+
+```
+Frontend: http://localhost:3000
+Backend:  http://localhost:5000
+```
+
+---
+
+## 🧪 How It Works
+
+1. Upload an image of a dish.
+2. AI detects the dish name and ingredients.
+3. Nutrition data is fetched from backend.
+4. Nearby restaurants & stores are displayed.
+5. User can explore detailed nutritional insights.
+
+---
+
+## 📊 Future Enhancements
+
+* ✅ User authentication & saved history
+* ✅ Personalized diet recommendations
+* ✅ Grocery price comparison
+* ✅ Meal planning feature
+
+---
+
+
+## 🧠 Learning Outcomes
+
+Through this project, the following concepts were implemented:
+
+* AI API Integration (Gemini)
+* Full-stack development
+* REST API design
+* Image processing workflow
+* Database design
+* Location-based services integration
+* Responsive UI design
+
+---
+
+## 👨‍💻 Author
+
+**Avanish**
+Computer Science Engineering Student
+Passionate about AI, Full-Stack Development & Problem Solving
+
+---
+
+## 📜 License
+
+This project is for educational and research purposes.
+
+---
+
+⭐ If you found this project interesting, consider giving it a star on GitHub!
