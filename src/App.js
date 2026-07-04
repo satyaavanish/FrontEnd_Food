@@ -138,19 +138,28 @@ function App() {
     if (!manualLocation) return alert("Please enter a location");
 
     try {
-      const geoRes = await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
-        params: {
-          address: manualLocation,
-          key: process.env.REACT_APP_PLACES_KEY
-        }
-      });
+     const geoRes = await axios.get(
+  "https://nominatim.openstreetmap.org/search",
+  {
+    params: {
+      q: manualLocation,
+      format: "json",
+      limit: 1,
+    },
+    headers: {
+      "Accept-Language": "en",
+    },
+  }
+);
 
-      if (geoRes.data.status !== "OK" || geoRes.data.results.length === 0) {
-        setError("Could not find location. Please enter a more specific address.");
-        return;
-      }
+if (!geoRes.data || geoRes.data.length === 0) {
+  setError("Could not find location.");
+  return;
+}
 
-      const { lat, lng } = geoRes.data.results[0].geometry.location;
+const lat = geoRes.data[0].lat;
+const lng = geoRes.data[0].lon;
+
       setLocation({ lat, lng });
       setLocationError("");
       setError("");
@@ -457,7 +466,9 @@ Respond in the following JSON format ONLY:
               <strong>{place.name}</strong> — {place.vicinity}. 
               <strong> Rating⭐ - {place.rating}</strong>
               <a
-                href={`https://www.google.com/maps/place/?q=place_id:${place.place_id}`}
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  place.name + " " + place.vicinity
+)}`}
                 target="_blank"
                 rel="noreferrer"
                 className="map-link"
