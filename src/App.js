@@ -24,7 +24,7 @@ function App() {
   const [summaryText, setSummaryText] = useState("");
   const [foodToSummarize, setFoodToSummarize] = useState("");
   const [isSummarizing, setIsSummarizing] = useState(false);
-  const GEMINI_API_KEY = process.env.REACT_APP_PLACES_KEY; 
+ const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY;
   const [detectedFood, setDetectedFood] = useState("");
   const summaryRef = useRef(null);
   const [citySuggestions, setCitySuggestions] = useState([]);
