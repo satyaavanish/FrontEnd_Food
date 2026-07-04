@@ -327,10 +327,18 @@ Respond in the following JSON format ONLY:
         });
 
         setNutrition(nutritionRes.data);
-      } catch (err) {
-        console.error("Error:", err);
-        setError("Something went wrong. Check console or API key.");
-      } finally {
+       } catch (err) {
+  console.log("Status:", err.response?.status);
+  console.log("Data:", err.response?.data);
+  console.log("Message:", err.message);
+  console.log("Full Error:", err);
+
+  setError(
+    err.response?.data?.error?.message ||
+    err.message ||
+    "Something went wrong."
+  );
+} finally {
         setLoading(false);
       }
     };
