@@ -8,6 +8,11 @@ function Chatbot() {
   const [chat, setChat] = useState([]);
   const [loading, setLoading] = useState(false);
   const chatEndRef = useRef(null);
+  // React state updates aren't synchronous, so relying on `loading` alone
+  // to block double-sends leaves a small window where Enter + a second
+  // trigger can both slip through before setLoading(true) takes effect.
+  // A ref updates immediately, closing that gap.
+  const isSendingRef = useRef(false);
  
   useEffect(() => {
     const savedChat = localStorage.getItem('chatHistory');
@@ -29,6 +34,8 @@ function Chatbot() {
 
   const sendQuery = async () => {
     if (!input.trim()) return;
+    if (isSendingRef.current) return; // already sending — ignore duplicate trigger
+    isSendingRef.current = true;
 
     const userMessage = input;
     setChat(prev => [...prev, { sender: 'user', text: userMessage }]);
@@ -69,7 +76,7 @@ function Chatbot() {
       const response = await axios.post(
         `${BACKEND_URL}/api/gemini`,
         { prompt },
-        { headers: { "Content-Type": "application/json" }, timeout: 15000 }
+        { headers: { "Content-Type": "application/json" }, timeout: 30000 }
       );
 
       const rawReply = response.data?.text || 'Sorry, no response.';
@@ -83,10 +90,13 @@ function Chatbot() {
 
       setChat(prev => [...prev, { sender: 'bot', text: cleanedReply }]);
     } catch (error) {
-      console.error(error);
+      // Log the ACTUAL backend error (not just the generic axios message)
+      // so it shows up in devtools without needing Render logs.
+      console.error("Chatbot /api/gemini error:", error.response?.data || error.message);
       setChat(prev => [...prev, { sender: 'bot', text: 'Sorry, there was an error.' }]);
     } finally {
       setLoading(false);
+      isSendingRef.current = false;
     }
   };
 
