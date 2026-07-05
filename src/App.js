@@ -457,7 +457,7 @@ Respond in the following JSON format ONLY:
               <strong>{place.name}</strong> — {place.vicinity}. 
               <strong> Rating⭐ - {place.rating}</strong>
               <a
-                href={`https://www.google.com/maps/place/?q=place_id:${place.place_id}`}
+              href={`https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lng}`}
                 target="_blank"
                 rel="noreferrer"
                 className="map-link"
