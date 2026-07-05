@@ -114,10 +114,12 @@ function App() {
               keyword: dishName
             }
           });
-          
+
           if (res.data.results && res.data.results.length > 0) {
-            const sorted = res.data.results.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-            setRestaurants(sorted);
+            // NOTE: Geoapify/Places results generally don't include a
+            // meaningful "rating" field for this dataset, so we no longer
+            // sort by rating here (see handleManualLocationSearch below).
+            setRestaurants(res.data.results);
             scrollToRestaurants();
           } else {
             setRestaurants([]);
@@ -135,48 +137,83 @@ function App() {
   };
 
   const handleManualLocationSearch = async () => {
-    if (!manualLocation) return alert("Please enter a location");
-
     try {
-      const geoRes = await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
-        params: {
-          address: manualLocation,
-          key: process.env.REACT_APP_PLACES_KEY
-        }
-      });
-
-      if (geoRes.data.status !== "OK" || geoRes.data.results.length === 0) {
-        setError("Could not find location. Please enter a more specific address.");
-        return;
-      }
-
-      const { lat, lng } = geoRes.data.results[0].geometry.location;
-      setLocation({ lat, lng });
-      setLocationError("");
       setError("");
 
-      const backendRes = await axios.get("https://backend-food-i0h7.onrender.com/api/places", {
-        params: {
-          lat,
-          lng,
-          keyword: dishName || ""
-        }
-      });
+      let lat = location.lat;
+      let lng = location.lng;
 
-      if (backendRes.data.results?.length > 0) {
-        const sorted = backendRes.data.results.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-        setRestaurants(sorted);
+      // If no coordinates are already available, geocode the typed location
+      // via OUR backend instead of calling Geoapify directly from the
+      // frontend. This keeps the Geoapify API key server-side only.
+      if (!lat || !lng) {
+        if (!manualLocation.trim()) {
+          alert("Please enter a location");
+          return;
+        }
+
+        const geoRes = await axios.get(
+          "https://backend-food-i0h7.onrender.com/api/geocode",
+          {
+            params: {
+              text: manualLocation,
+            },
+          }
+        );
+
+        if (
+          !geoRes.data ||
+          geoRes.data.lat == null ||
+          geoRes.data.lng == null
+        ) {
+          setError("Could not find location.");
+          return;
+        }
+
+        lat = geoRes.data.lat;
+        lng = geoRes.data.lng;
+
+        setLocation({ lat, lng });
+      }
+
+      // Call your backend
+      const backendRes = await axios.get(
+        "https://backend-food-i0h7.onrender.com/api/places",
+        {
+          params: {
+            lat,
+            lng,
+            keyword: dishName || "",
+          },
+        }
+      );
+
+      if (
+        backendRes.data.results &&
+        backendRes.data.results.length > 0
+      ) {
+        // Geoapify-based results don't carry a real "rating" value
+        // (backend sends "N/A"), so sorting by rating was a no-op.
+        // Just use the results as returned by the backend.
+        setRestaurants(backendRes.data.results);
       } else {
         setRestaurants([]);
         setError("No nearby restaurants found.");
       }
+
+      scrollToRestaurants();
     } catch (err) {
-      console.error("Manual location search error:", err.response?.data || err.message);
-      setError("Failed to search location. Check network or API key.");
-    } finally {
-      scrollToRestaurants(); 
+      console.error(
+        "Manual location search error:",
+        err.response?.data || err.message
+      );
+
+      setRestaurants([]);
+      setError("Failed to search restaurants.");
     }
   };
+
+  //
 
   const generateSummary = async () => {
     if (!dishName) return;
@@ -419,7 +456,7 @@ Respond in the following JSON format ONLY:
   <button 
     onClick={handleManualLocationSearch} 
     className="manual-button"
-    disabled={!manualLocation}
+    disabled={!manualLocation && !location.lat}
   >
     🔍 Search Restaurants
   </button>
