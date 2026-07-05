@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
+const BACKEND_URL = "https://backend-food-i0h7.onrender.com";
+
 function Chatbot() {
   const [input, setInput] = useState('');
   const [chat, setChat] = useState([]);
@@ -25,71 +27,68 @@ function Chatbot() {
     }
   }, [chat]);
 
-   const sendQuery = async () => {
-  if (!input.trim()) return;
+  const sendQuery = async () => {
+    if (!input.trim()) return;
 
-  const userMessage = input;
-  setChat(prev => [...prev, { sender: 'user', text: userMessage }]);
-  setInput('');
-  setLoading(true);
+    const userMessage = input;
+    setChat(prev => [...prev, { sender: 'user', text: userMessage }]);
+    setInput('');
+    setLoading(true);
 
-  try {
-    const lowerInput = userMessage.toLowerCase();
-    let prompt = '';
+    try {
+      const lowerInput = userMessage.toLowerCase();
+      let prompt = '';
 
-    if (
-      lowerInput.includes('how to make') ||
-      lowerInput.includes('recipe for') ||
-      lowerInput.startsWith('how do i make') ||
-      lowerInput.includes('prepare') ||
-      lowerInput.includes('steps to make')
-    ) {
-       
-      prompt = `Give a simple, step-by-step recipe for: ${userMessage.replace(/(how to make|recipe for|steps to make|prepare|how do i make)/gi, '').trim()}`;
-    } else if (
-      lowerInput.includes('what should') ||
-      lowerInput.includes('suggest') ||
-      lowerInput.includes('recommend') ||
-      lowerInput.includes('food for') ||
-      lowerInput.includes('dish for')
-    ) {
-      
-      prompt = `List only dish names (no descriptions) for this prompt: "${userMessage}"`;
-    } else {
-       
-      prompt = `You are a helpful food assistant. Respond to this user message: "${userMessage}"`;
-    }
+      if (
+        lowerInput.includes('how to make') ||
+        lowerInput.includes('recipe for') ||
+        lowerInput.startsWith('how do i make') ||
+        lowerInput.includes('prepare') ||
+        lowerInput.includes('steps to make')
+      ) {
 
-    const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.REACT_APP_PLACES_KEY}`,
-      {
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: prompt }],
-          },
-        ],
+        prompt = `Give a simple, step-by-step recipe for: ${userMessage.replace(/(how to make|recipe for|steps to make|prepare|how do i make)/gi, '').trim()}`;
+      } else if (
+        lowerInput.includes('what should') ||
+        lowerInput.includes('suggest') ||
+        lowerInput.includes('recommend') ||
+        lowerInput.includes('food for') ||
+        lowerInput.includes('dish for')
+      ) {
+
+        prompt = `List only dish names (no descriptions) for this prompt: "${userMessage}"`;
+      } else {
+
+        prompt = `You are a helpful food assistant. Respond to this user message: "${userMessage}"`;
       }
-    );
 
-    const rawReply =
-      response.data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, no response.';
+      // Routed through our backend's Gemini proxy so the API key never
+      // ships to the browser (it used to be called directly from here
+      // with REACT_APP_PLACES_KEY, which isn't even the right key name
+      // for Gemini — that's the Google Places key).
+      const response = await axios.post(
+        `${BACKEND_URL}/api/gemini`,
+        { prompt },
+        { headers: { "Content-Type": "application/json" }, timeout: 15000 }
+      );
 
-    const cleanedReply = rawReply
-      .replace(/[#*:•\-]/g, '')
-      .split('\n')
-      .map(line => line.trim())
-      .filter(line => line)
-      .join('\n');
+      const rawReply = response.data?.text || 'Sorry, no response.';
 
-    setChat(prev => [...prev, { sender: 'bot', text: cleanedReply }]);
-  } catch (error) {
-    console.error(error);
-    setChat(prev => [...prev, { sender: 'bot', text: 'Sorry, there was an error.' }]);
-  } finally {
-    setLoading(false);
-  }
-};
+      const cleanedReply = rawReply
+        .replace(/[#*:•\-]/g, '')
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line)
+        .join('\n');
+
+      setChat(prev => [...prev, { sender: 'bot', text: cleanedReply }]);
+    } catch (error) {
+      console.error(error);
+      setChat(prev => [...prev, { sender: 'bot', text: 'Sorry, there was an error.' }]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   return (
