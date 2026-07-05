@@ -4,6 +4,8 @@ import './Weather.css';
 import { useNavigate } from "react-router-dom";
 import CityAutoComplete from './CityAutoComplete';
 
+const BACKEND_URL = "https://backend-food-i0h7.onrender.com";
+
 function WeatherFoodSuggestions() {
   const [city, setCity] = useState('');
   const [restaurants, setRestaurants] = useState([]);
@@ -20,7 +22,7 @@ function WeatherFoodSuggestions() {
   const navigate = useNavigate();
   const [selectedCuisine, setSelectedCuisine] = useState('');
   const [cuisineFoods, setCuisineFoods] = useState([]);
-  
+
   const cuisineOptions = [
     "Indian", "Italian", "Chinese", "Mexican", "French",
     "Japanese", "Thai", "Greek", "American", "Spanish"
@@ -28,9 +30,12 @@ function WeatherFoodSuggestions() {
 
   const restaurantResultsRef = useRef(null);
   const summaryRef = useRef(null);
-  
-  const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_PLACES_KEY;
-  const GEMINI_API_KEY = process.env.REACT_APP_PLACES_KEY;
+
+  // NOTE: OpenWeather still runs client-side because it's a low-risk,
+  // low-quota key. The Google Places key and Gemini key have been
+  // removed from here — both the geocoding and the AI summary now go
+  // through our own backend instead, so those keys never ship to the
+  // browser.
   const OPENWEATHER_API_KEY = process.env.REACT_APP_WEATHER_KEY;
 
   const scrollToSuggestions = () => {
@@ -177,24 +182,19 @@ function WeatherFoodSuggestions() {
       console.error("Geolocation error:", err);
     }
   };
-   
-
-
 
   const searchNearbyRestaurants = async (lat, lng, keyword) => {
     setRestaurantsLoading(true);
     try {
-      const res = await axios.get("https://backend-food-i0h7.onrender.com/api/places", {
-        params: {
-          lat: lat,
-          lng: lng,
-          keyword: keyword
-        }
+      const res = await axios.get(`${BACKEND_URL}/api/places`, {
+        params: { lat, lng, keyword }
       });
-      
+
       if (res.data.results && res.data.results.length > 0) {
-        const sorted = res.data.results.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-        setRestaurants(sorted);
+        // The backend's restaurant source (Geoapify) doesn't provide a
+        // real "rating" value (it sends "N/A" for every result), so
+        // sorting by rating was a no-op. Use the results as returned.
+        setRestaurants(res.data.results);
         setError('');
       } else {
         setRestaurants([]);
@@ -217,19 +217,18 @@ function WeatherFoodSuggestions() {
     }
 
     try {
-      const geoRes = await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
-        params: {
-          address: city,
-          key: GOOGLE_MAPS_API_KEY
-        }
+      // Geocode via our own backend (Geoapify-backed) instead of calling
+      // Google Maps directly from the browser with an exposed key.
+      const geoRes = await axios.get(`${BACKEND_URL}/api/geocode`, {
+        params: { text: city }
       });
 
-      if (geoRes.data.status !== "OK" || geoRes.data.results.length === 0) {
+      if (!geoRes.data || geoRes.data.lat == null || geoRes.data.lng == null) {
         setError("Could not find location. Please enter a more specific address.");
         return;
       }
 
-      const { lat, lng } = geoRes.data.results[0].geometry.location;
+      const { lat, lng } = geoRes.data;
       setLocation({ lat, lng });
       setLocationError("");
       setError("");
@@ -237,7 +236,7 @@ function WeatherFoodSuggestions() {
       await searchNearbyRestaurants(lat, lng, foodItem.name);
     } catch (err) {
       console.error("Manual location search error:", err.response?.data || err.message);
-      setError("Failed to search location. Check network or API key.");
+      setError("Failed to search location. Please try again.");
     }
   };
 
@@ -247,13 +246,7 @@ function WeatherFoodSuggestions() {
     setIsSummarizing(true);
     setSummaryText("");
 
-    try {
-      const response = await axios.post(
-         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-        {
-          contents: [{
-            parts: [{
-              text: `Provide 8 concise bullet points about the Indian dish "${selectedFood.name}" covering:
+    const prompt = `Provide 8 concise bullet points about the Indian dish "${selectedFood.name}" covering:
 • Origin Region
 • Main Ingredients (3-5)
 • Flavor Profile
@@ -261,29 +254,26 @@ function WeatherFoodSuggestions() {
 • Typical Serving Occasion
 • Nutritional Benefit
 • Common Variations
-• Cultural Significance`
-            }]
-          }]
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          timeout: 10000
-        }
+• Cultural Significance`;
+
+    try {
+      // Routed through our backend so the Gemini key stays server-side.
+      const response = await axios.post(
+        `${BACKEND_URL}/api/gemini`,
+        { prompt },
+        { headers: { "Content-Type": "application/json" }, timeout: 15000 }
       );
 
-      if (!response.data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+      if (!response.data?.text) {
         throw new Error("Empty response from API");
       }
 
-      const summary = response.data.candidates[0].content.parts[0].text;
-      setSummaryText(summary);
+      setSummaryText(response.data.text);
     } catch (err) {
       console.error("API Error:", err);
       let errorMessage = "Failed to generate summary";
-      if (err.response?.data?.error?.message) {
-        errorMessage += `: ${err.response.data.error.message}`;
+      if (err.response?.data?.error) {
+        errorMessage += `: ${err.response.data.error}`;
       }
       setSummaryText(`${errorMessage}. Please try again later.`);
     } finally {
@@ -387,10 +377,10 @@ function WeatherFoodSuggestions() {
               {restaurants.map((place, index) => (
                 <li key={index}>
                   <strong>{place.name}</strong> — {place.vicinity}.
-                  <strong> Rating: {place.rating ? '⭐'.repeat(Math.round(place.rating)) : 'N/A'}</strong>
-                  {place.place_id && (
+                  <strong> Rating: {place.rating}</strong>
+                  {place.lat != null && place.lng != null && (
                     <a
-                      href={`https://www.google.com/maps/place/?q=place_id:${place.place_id}`}
+                      href={`https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lng}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="map-link"
